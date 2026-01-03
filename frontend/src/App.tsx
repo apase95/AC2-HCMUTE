@@ -14,14 +14,13 @@ import { QuizExamPage } from "./pages/QuizExamPage";
 import { PreviewExamPage } from "./pages/PreviewExamPage";
 import { SettingPage } from "./pages/SettingPage";
 import { ExamUploadPage } from "./pages/ExamUploadPage";
-import { LayoutParticles } from "./components/sub/LayoutParticles";
+// import { LayoutParticles } from "./components/sub/LayoutParticles";
 
 function App() {
 
   return (
     <Router>
       <div className="bg-black min-h-screen text-white">
-        <LayoutParticles />
         <Routes>
           <Route path="/" element={<><HomePage /></>} />
 

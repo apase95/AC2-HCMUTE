@@ -10,6 +10,7 @@ import type { AppDispatch, RootState } from "../redux/store";
 import { BannerHomePage } from "../forms/BannerHomePage";
 import { SearchResultForm } from "../forms/SearchResultForm";
 import { LoadingSpinner } from "../components/sub/LoadingSpinner";
+import { LayoutParticles } from "../components/sub/LayoutParticles";
 
 export const HomePage = () => {
     const dispatch = useDispatch<AppDispatch>();
@@ -48,6 +49,7 @@ export const HomePage = () => {
 
     return (
         <>
+            <LayoutParticles />
             <Header />
             <div className="relative min-h-screen h-auto w-full grid-pattern">
                 <div className="mx-auto py-24 w-[90%] lg:w-[80%]">        

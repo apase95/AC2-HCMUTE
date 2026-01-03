@@ -17,28 +17,19 @@ export const LayoutParticles = () => {
     const particlesOptions = {
         particles: {
             number: {
-                value: 30,
+                value: 40,
                 density: { enable: true, area: 800 },
             },
             shape: {
                 type: "image",
                 options: {
                     image: [
-                        {
-                            src: "/real-cherry-blossom.png",
-                            width: 100,
-                            height: 100,
-                        },
-                        {
-                            src: "/petals-cherry-blossom.png",
-                            width: 200,
-                            height: 200,
-                        },
-                        {
-                            src: "/petals-cherry-blossom.png",
-                            width: 200,
-                            height: 200,
-                        },
+                        // {   src: "/real-cherry-blossom.png", width: 100, height: 100, },
+                        // {   src: "/petals-cherry-blossom.png", width: 100, height: 100, },
+                        // {   src: "/petals-cherry-blossom.png", width: 100, height: 100, },
+                        {   src: "/snow_flake.png", width: 100, height: 100, },
+                        {   src: "/snow_flake.png", width: 100, height: 100, },
+                        {   src: "/snow_flake.png", width: 100, height: 100, },
                     ],
                 },
             },
@@ -46,28 +37,33 @@ export const LayoutParticles = () => {
                 value: { min: 0.8, max: 1 },
             },
             size: {
-                value: { min: 5, max: 15 },
+                value: { min: 4, max: 8 },
             },
             move: {
                 enable: true,
                 direction: "bottom",
-                speed: { min: 1, max: 3 },
+                speed: { min: 1, max: 2 },
                 straight: false,
-                random: false,
+                random: true,
                 outModes: { default: "out", bottom: "out", top: "out"},
             },
             rotate: {
                 value: { min: 0, max: 360 },
-                animation: { enable: true, speed: 5, sync: false, },
+                animation: { enable: true, speed: { min: 5, max: 15 }, sync: false, },
                 direction: "random",
             },
-            tilt: {
+            wobble: {
                 enable: true,
+                distance: 10,
+                speed: { min: -1, max: 2 },
+            },
+            tilt: {
+                enable: false,
                 value: { min: 0, max: 45 },
-                animation: { enable: true, speed: 3 },
+                animation: { enable: true, speed: 1 },
             },
         },
-        fpsLimit: 120,
+        fpsLimit: 60,
         background: {
             color: "transparent",
         },
