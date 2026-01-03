@@ -86,6 +86,6 @@ We welcome contributions! If you have ideas to improve this website, feel free t
 ## 📞 Contact
 
 - **Email**: hodtduy.work@gmail.com
-- **LinkedIn**: https://www.linkedin.com/in/duy-h%E1%BB%93-a33159383/
+- **LinkedIn**: [hodangthaiduy](https://www.linkedin.com/in/duy-ho-dang-thai-a33159383/)
 
 Thank you for visiting! Happy learning! ☁️
