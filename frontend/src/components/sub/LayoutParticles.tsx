@@ -2,7 +2,11 @@ import { useEffect, useState } from "react";
 import Particles, { initParticlesEngine } from "@tsparticles/react";
 import { loadFull } from "tsparticles";
 
-export const LayoutParticles = () => {
+interface LayoutParticlesProps {
+    zIndex?: number;
+}
+
+export const LayoutParticles = ({ zIndex = 1 }: LayoutParticlesProps) => {
   
     const [init, setInit] = useState(false);
     
@@ -45,7 +49,7 @@ export const LayoutParticles = () => {
                 speed: { min: 1, max: 2 },
                 straight: false,
                 random: true,
-                outModes: { default: "out", bottom: "out", top: "out"},
+                outModes: { default: "out", bottom: "out"},
             },
             rotate: {
                 value: { min: 0, max: 360 },
@@ -69,7 +73,7 @@ export const LayoutParticles = () => {
         },
         fullScreen: {
             enable: true,
-            zIndex: 1,
+            zIndex: zIndex,
         },
         detectRetina: true,
     };

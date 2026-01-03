@@ -3,6 +3,7 @@ import { SettingForm } from "../forms/SettingForm";
 import { useDispatch, useSelector } from "react-redux";
 import type { AppDispatch, RootState } from "../redux/store";
 import { changePhoneNumber, changePassword } from "../redux/authSlice";
+import { LayoutParticles } from "../components/sub/LayoutParticles";
 
 export const SettingPage = () => {
     const dispatch = useDispatch<AppDispatch>();
@@ -33,12 +34,15 @@ export const SettingPage = () => {
     };
 
     return (
-        <SettingForm 
-            onChangePhone={handleChangePhone}
-            onChangePassword={handleChangePassword}
-            loading={isLoading}
-            hasPhoneNumber={hasPhoneNumber}
-            message={message}
-        />
+        <>
+            <LayoutParticles />
+            <SettingForm 
+                onChangePhone={handleChangePhone}
+                onChangePassword={handleChangePassword}
+                loading={isLoading}
+                hasPhoneNumber={hasPhoneNumber}
+                message={message}
+            />
+        </>
     );
 };

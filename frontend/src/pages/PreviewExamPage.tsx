@@ -6,6 +6,7 @@ import { fetchExamById } from "../redux/examSlice";
 import { LoadingSpinner } from "../components/sub/LoadingSpinner";
 import { PreviewExamForm } from "../forms/PreviewExamForm";
 import { ErrorComponent } from "../components/sub/ErrorComponent";
+import { LayoutParticles } from "../components/sub/LayoutParticles";
 
 export const PreviewExamPage = () => {
     const { id } = useParams<{ id: string }>();
@@ -44,14 +45,17 @@ export const PreviewExamPage = () => {
     if (!currentItem) return <ErrorComponent error="Exam not found." />;
 
     return (
-        <PreviewExamForm 
-            exam={currentItem}
-            onStartExam={() => handleStartPart(-1)}
-            onStartPart={handleStartPart}
-            isFilterOpen={isFilterOpen}
-            onToggleFilter={handleToggleFilter}
-            onCloseFilter={handleCloseFilter}
-            onSelectFilter={handleSelectFilter}
-        />
+        <>
+            <LayoutParticles />
+            <PreviewExamForm 
+                exam={currentItem}
+                onStartExam={() => handleStartPart(-1)}
+                onStartPart={handleStartPart}
+                isFilterOpen={isFilterOpen}
+                onToggleFilter={handleToggleFilter}
+                onCloseFilter={handleCloseFilter}
+                onSelectFilter={handleSelectFilter}
+            />
+        </>
     );
 };

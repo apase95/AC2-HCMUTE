@@ -6,6 +6,7 @@ import { checkAuth, updateUser } from "../redux/authSlice";
 import { ProfileForm } from "../forms/ProfileForm";
 import { LoadingSpinner } from "../components/sub/LoadingSpinner";
 import { ErrorComponent } from "../components/sub/ErrorComponent";
+import { LayoutParticles } from "../components/sub/LayoutParticles";
 
 export const ProfilePage = () => {
     const dispatch = useDispatch<AppDispatch>();
@@ -76,15 +77,18 @@ export const ProfilePage = () => {
     if (!user) return null;
 
     return (
-        <ProfileForm 
-            user={user}
-            formData={formData}
-            loading={isLoading}
-            message={message}
-            handleFormatPhoneNumber={formatPhoneNumber}
-            onChange={handleChange}
-            onSave={handleSave}
-        />
+        <>
+            <LayoutParticles />
+            <ProfileForm 
+                user={user}
+                formData={formData}
+                loading={isLoading}
+                message={message}
+                handleFormatPhoneNumber={formatPhoneNumber}
+                onChange={handleChange}
+                onSave={handleSave}
+            />
+        </>
     )
 }
 

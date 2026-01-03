@@ -7,6 +7,7 @@ import { createBlog, fetchBlogById, resetUploadState as resetBlogState } from ".
 import { UploadForm } from "../forms/UploadForm";
 import api from "../libs/api";
 import { ErrorComponent } from "../components/sub/ErrorComponent";
+import { LayoutParticles } from "../components/sub/LayoutParticles";
 
 export const UploadPage = () => {
   const navigate = useNavigate();
@@ -138,6 +139,7 @@ export const UploadPage = () => {
 
   return (
     <>
+      <LayoutParticles />
       <div className="relative pt-14 min-h-screen h-auto w-full grid-pattern">
         <div className="w-full flex justify-center">
           <UploadForm

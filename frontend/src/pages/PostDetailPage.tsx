@@ -40,16 +40,18 @@ export const PostDetailPage = () => {
     }
 
     return (
-        <PostDetailForm 
-            loading={loading}
-            title={currentItem.title}
-            content={currentItem.content}
-            coverImage={currentItem.coverImage}
-            authorName={currentItem.author?.displayName || "Unknown Author"}
-            authorAvatar={currentItem.author?.avatarURL}
-            createdAt={currentItem.createdAt}
-            readTime={currentItem.readTime || "5 minutes"}
-            tags={currentItem.tags || []}
-        />
+        <>
+            <PostDetailForm 
+                loading={loading}
+                title={currentItem.title}
+                content={currentItem.content}
+                coverImage={currentItem.coverImage}
+                authorName={currentItem.author?.displayName || "Unknown Author"}
+                authorAvatar={currentItem.author?.avatarURL}
+                createdAt={currentItem.createdAt}
+                readTime={currentItem.readTime || "5 minutes"}
+                tags={currentItem.tags || []}
+            />
+        </>
   )
 }

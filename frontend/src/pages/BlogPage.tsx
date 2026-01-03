@@ -7,6 +7,7 @@ import { FeatureBanner } from "../components/sub/FeatureBanner";
 import { fetchBlogs } from "../redux/blogSlice";
 import { ErrorComponent } from "../components/sub/ErrorComponent";
 import { LoadingSpinner } from "../components/sub/LoadingSpinner";
+import { LayoutParticles } from "../components/sub/LayoutParticles";
 
 export const BlogPage = () => {
     const dispatch = useDispatch<AppDispatch>();
@@ -50,28 +51,31 @@ export const BlogPage = () => {
     }, [allBlogs]);
 
     return (
-        <div className="relative min-h-screen h-auto w-full grid-pattern">
-            <div className="mx-auto pt-14 pb-20 w-[90%] md:w-[80%]">
-                {!loading && latestBlogs.length > 0 && (
-                    <FeatureBanner blogs={latestBlogs} />
-                )}
-                {loading ? (
-                    <LoadingSpinner />
-                ) : error ? (
-                    <ErrorComponent error={error} inBlock={true} />
-                ) : (
-                    <>
-                        <CategoryFilterComponent 
-                            tags={["Frontend", "Backend", "Design", "AWS"]} 
-                            selectedTag={activeTag}
-                            selectedSort={activeSort}
-                            onSelectTag={setActiveTag}
-                            onSelectSort={setActiveSort}
-                        />
-                        <BlogsListComponent blogs={filteredBlogs} />
-                    </>
-                )}
+        <>
+            <LayoutParticles />
+            <div className="relative min-h-screen h-auto w-full grid-pattern">
+                <div className="mx-auto pt-14 pb-20 w-[90%] md:w-[80%]">
+                    {!loading && latestBlogs.length > 0 && (
+                        <FeatureBanner blogs={latestBlogs} />
+                    )}
+                    {loading ? (
+                        <LoadingSpinner />
+                    ) : error ? (
+                        <ErrorComponent error={error} inBlock={true} />
+                    ) : (
+                        <>
+                            <CategoryFilterComponent 
+                                tags={["Frontend", "Backend", "Design", "AWS"]} 
+                                selectedTag={activeTag}
+                                selectedSort={activeSort}
+                                onSelectTag={setActiveTag}
+                                onSelectSort={setActiveSort}
+                            />
+                            <BlogsListComponent blogs={filteredBlogs} />
+                        </>
+                    )}
+                </div>
             </div>
-        </div>
+        </>
     );
 };

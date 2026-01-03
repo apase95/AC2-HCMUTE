@@ -6,6 +6,7 @@ import type { AppDispatch, RootState } from "../redux/store";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchExamById } from "../redux/examSlice";
 import { ErrorComponent } from "../components/sub/ErrorComponent";
+import { LayoutParticles } from "../components/sub/LayoutParticles";
 
 export const ExamUploadPage = () => {
 
@@ -116,25 +117,28 @@ export const ExamUploadPage = () => {
     }
 
     return (
-         <div className="relative min-h-screen h-auto w-full grid-pattern pt-20 px-4">
-            <ExamUploadForm 
-                isEditMode={isEditMode}
-                title={title}
-                content={content}
-                jsonContent={jsonContent}
-                loading={loading}
-                error={error}
-                thumbnailPreview={thumbnailPreview} 
-                onTitleChange={setTitle}
-                onContentChange={setContent}
-                onJsonChange={setJsonContent}
-                onThumbnailChange={setThumbnail}
-                
-                onSubmit={handleUpload}
-                onCancel={() => navigate(-1)}
-                onGoToBlog={() => navigate('/blogs')}
-                onGoToDocument={() => navigate('/upload')}
-            />
-        </div>
+        <>
+            <LayoutParticles />
+            <div className="relative min-h-screen h-auto w-full grid-pattern pt-20 px-4">
+                <ExamUploadForm 
+                    isEditMode={isEditMode}
+                    title={title}
+                    content={content}
+                    jsonContent={jsonContent}
+                    loading={loading}
+                    error={error}
+                    thumbnailPreview={thumbnailPreview} 
+                    onTitleChange={setTitle}
+                    onContentChange={setContent}
+                    onJsonChange={setJsonContent}
+                    onThumbnailChange={setThumbnail}
+                    
+                    onSubmit={handleUpload}
+                    onCancel={() => navigate(-1)}
+                    onGoToBlog={() => navigate('/blogs')}
+                    onGoToDocument={() => navigate('/upload')}
+                />
+            </div>
+        </>
     );
 };

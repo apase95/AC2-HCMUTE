@@ -6,6 +6,7 @@ import type { AppDispatch, RootState } from "../redux/store";
 import { fetchDocuments } from "../redux/documentSlice";
 import { LoadingSpinner } from "../components/sub/LoadingSpinner";
 import { ErrorComponent } from "../components/sub/ErrorComponent";
+import { LayoutParticles } from "../components/sub/LayoutParticles";
 
 
 export const DocumentPage = () => {
@@ -45,35 +46,38 @@ export const DocumentPage = () => {
     }, [allDocuments, activeTag, activeSort]);
 
     return (
-        <div className="relative min-h-screen h-auto w-full grid-pattern">
-            <div className="mx-auto py-10 w-[90%] lg:w-[50%] md:w-[80%] sm:w-[90%]">
-                
-                {!loading && !error &&  (
-                    <CategoryFilterComponent 
-                        tags={["Frontend", "Backend", "Design", "AWS"]} 
-                        selectedTag={activeTag}
-                        selectedSort={activeSort}
-                        onSelectTag={setActiveTag}
-                        onSelectSort={setActiveSort}
-                    />
-                )}
-                
-                <div className="mb-12 flex flex-col space-y-6">
-                    {loading ? (
-                        <LoadingSpinner />
-                    ) : error ? (
-                        <ErrorComponent error={error} inBlock={true} />
-                    ) : filteredDocuments.length > 0 ? (
-                        filteredDocuments.map((doc) => (
-                            <DocumentCard key={doc._id} document={doc} />
-                        ))
-                    ) : (
-                        <div className="text-white/60 text-center py-10">
-                            No documents found
-                        </div>
+        <>
+            <LayoutParticles />
+            <div className="relative min-h-screen h-auto w-full grid-pattern">
+                <div className="mx-auto py-10 w-[90%] lg:w-[50%] md:w-[80%] sm:w-[90%]">
+                    
+                    {!loading && !error &&  (
+                        <CategoryFilterComponent 
+                            tags={["Frontend", "Backend", "Design", "AWS"]} 
+                            selectedTag={activeTag}
+                            selectedSort={activeSort}
+                            onSelectTag={setActiveTag}
+                            onSelectSort={setActiveSort}
+                        />
                     )}
+                    
+                    <div className="mb-12 flex flex-col space-y-6">
+                        {loading ? (
+                            <LoadingSpinner />
+                        ) : error ? (
+                            <ErrorComponent error={error} inBlock={true} />
+                        ) : filteredDocuments.length > 0 ? (
+                            filteredDocuments.map((doc) => (
+                                <DocumentCard key={doc._id} document={doc} />
+                            ))
+                        ) : (
+                            <div className="text-white/60 text-center py-10">
+                                No documents found
+                            </div>
+                        )}
+                    </div>
                 </div>
             </div>
-        </div>
+        </>
     );
 };
