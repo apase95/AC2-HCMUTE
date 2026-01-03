@@ -14,7 +14,6 @@ import { QuizExamPage } from "./pages/QuizExamPage";
 import { PreviewExamPage } from "./pages/PreviewExamPage";
 import { SettingPage } from "./pages/SettingPage";
 import { ExamUploadPage } from "./pages/ExamUploadPage";
-// import { LayoutParticles } from "./components/sub/LayoutParticles";
 
 function App() {
 
