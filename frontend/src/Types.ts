@@ -55,7 +55,17 @@ export interface ExamType {
   completionCount?: number;
 
   parts: ExamPart[];
+  reviews?: Review[];
+  userScores?: Record<string, number>;
 }
+
+export interface Review {
+  _id: string;
+  user: User;
+  rating: number;
+  comment: string;
+  createdAt: string;
+};
 
 export interface User {
   _id: string;

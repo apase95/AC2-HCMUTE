@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import type { AppDispatch, RootState } from "../redux/store";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchExamById } from "../redux/examSlice";
+import { addExamReview, fetchExamById } from "../redux/examSlice";
 import { LoadingSpinner } from "../components/sub/LoadingSpinner";
 import { PreviewExamForm } from "../forms/PreviewExamForm";
 import { ErrorComponent } from "../components/sub/ErrorComponent";
@@ -13,6 +13,7 @@ export const PreviewExamPage = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch<AppDispatch>();
     
+    const { user } = useSelector((state: RootState) => state.auth);
     const { currentItem, loading, error } = useSelector((state: RootState) => state.exams);
 
     const [isFilterOpen, setIsFilterOpen] = useState(false);
@@ -40,6 +41,21 @@ export const PreviewExamPage = () => {
         setIsFilterOpen(false);
     };
 
+    let userScore =  0;
+    if (currentItem && user) {
+        if (currentItem.userScores && currentItem.userScores[user._id]) {
+            userScore = currentItem.userScores[user._id];
+        } else if (currentItem.completionCount) {
+             userScore = currentItem.completionCount;
+        }
+    }
+
+    const handleSubmitReview = (rating: number, comment: string) => {
+        if (currentItem) {
+            dispatch(addExamReview({ id: currentItem._id, rating, comment }));
+        }
+    };
+
     if (loading) return <LoadingSpinner />;
     if (error) return <ErrorComponent error={error} />;
     if (!currentItem) return <ErrorComponent error="Exam not found." />;
@@ -55,6 +71,8 @@ export const PreviewExamPage = () => {
                 onToggleFilter={handleToggleFilter}
                 onCloseFilter={handleCloseFilter}
                 onSelectFilter={handleSelectFilter}
+                userScore={userScore}
+                onSubmitReview={handleSubmitReview}
             />
         </>
     );

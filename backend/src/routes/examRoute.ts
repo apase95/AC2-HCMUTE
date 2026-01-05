@@ -5,7 +5,9 @@ import {
     getAllExams, 
     getExamById, 
     updateExam,
-    createExamFromJson
+    createExamFromJson,
+    addReview,
+    submitExamScore
 } from '../controllers/examController.ts';
 import { checkAdmin, checkOwnerOrAdmin, protectedRoute } from '../middlewares/authMiddleware.ts';
 import { uploadCloudinary } from '../libs/uploadCloudinary.ts';
@@ -18,6 +20,8 @@ router.get('/:id', protectedRoute, getExamById);
 router.post('/', protectedRoute, checkAdmin, createExam);
 router.post('/upload-json', protectedRoute, checkAdmin, createExamFromJson);
 
+router.post('/:id/review', protectedRoute, addReview);
+router.post('/:id/score', protectedRoute, submitExamScore);
 router.put('/:id', 
     protectedRoute, 
     checkOwnerOrAdmin("exam"), 

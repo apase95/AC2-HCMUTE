@@ -5,7 +5,7 @@ import type { Question } from "../Types";
 import { ErrorComponent } from "../components/sub/ErrorComponent";
 import { useDispatch, useSelector } from "react-redux";
 import type { AppDispatch, RootState } from "../redux/store";
-import { fetchExamById } from "../redux/examSlice";
+import { fetchExamById, submitExamResult } from "../redux/examSlice";
 import { LoadingSpinner } from "../components/sub/LoadingSpinner";
 
 export const QuizExamPage = () => {
@@ -33,6 +33,11 @@ export const QuizExamPage = () => {
         }
     }, [exam, partIndex]);
 
+    const allQuestions: Question[] = useMemo(() => {
+        if (!exam || !exam.parts) return [];
+        return exam.parts.flatMap(part => part.questions);
+    }, [exam]);
+
     const [bookmarkedQuestions, setBookmarkedQuestions] = useState<(number | string)[]>([]);
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
     const [userAnswers, setUserAnswers] = useState<Record<number | string, string[]>>({});
@@ -41,10 +46,24 @@ export const QuizExamPage = () => {
 
     const handleFinish = (forceSubmit = false) => {
         if (!isSubmitted) {
-            if (forceSubmit || 
-                confirm("Are you sure you want to submit? You cannot change answers afterwards.")) 
-            {
+            if (forceSubmit || confirm("Are you sure you want to submit? You cannot change answers afterwards.")) {
                 setIsSubmitted(true);
+
+                let correctQ = 0;
+                allQuestions.forEach(q => {
+                    const uAns = userAnswers[q.id] || [];
+                    const isCorrect = 
+                        uAns.length === q.correctAnswers.length &&
+                        uAns.slice().sort().toString() === [...q.correctAnswers].sort().toString();
+                    
+                    if (isCorrect) correctQ++;
+                });
+
+                const scorePercent = Math.round((correctQ / allQuestions.length) * 100);
+
+                if (id) {
+                    dispatch(submitExamResult({ id, score: scorePercent }));
+                }
             }
         }
     };

@@ -205,12 +205,67 @@ export const deleteExam = async (req, res) => {
             return res.status(404).json({ message: "Exam not found" });
         }
         if (exam.author.toString() !== userId) {
-            return res.status(403).json({ message: "Forbidden: You are not the author of this exam" });
+            return res.status(403).json({ message: "You are not the author of this exam" });
         }
         await exam.deleteOne();
         res.status(200).json({ message: "Exam deleted successfully" });
     } catch (error) {
         console.error("Error deleting exam:", error);
         res.status(500).json({ message: "Internal server error" });
+    }
+};
+
+export const submitExamScore = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { score, partId } = req.body;
+        const userId = req.user._id.toString();
+
+        const exam = await Exam.findById(id);
+        if (!exam) return res.status(404).json({ message: "Exam not found" });
+
+        exam.submittedCount = (exam.submittedCount || 0) + 1;
+        const currentHighScore = exam.userScores.get(userId) || 0;
+        if (score > currentHighScore) {
+            exam.userScores.set(userId, score);
+        }
+        await exam.save();
+        res.status(200).json({ 
+            message: "Score saved",
+            highScore: Math.max(score, currentHighScore),
+            submittedCount: exam.submittedCount,
+        });
+    } catch (error) {
+        res.status(500).json({ message: "Error Saving Score" });
+    }
+};
+
+export const addReview = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { rating, comment } = req.body;
+        const userId = req.user._id.toString();
+
+        const exam = await Exam.findById(id);
+        if (!exam) return res.status(404).json({ message: "Exam not found" });
+
+        const userHighScore = exam.userScores.get(userId) || 0;
+        if (userHighScore < 80) return res.status(403).json({ message: "You must achieve 80% score to review" });
+
+        const alreadyReviewed = exam.reviews.find(r => r.user.toString() === userId);
+        if (alreadyReviewed) return res.status(400).json({ message: "You have already reviewed this exam" });
+
+        const newReview = { user: userId, rating: Number(rating), comment };
+        exam.reviews.push(newReview);
+        exam.ratingCount = exam.reviews.length;
+        exam.rating = exam.reviews.reduce((acc, item) => acc + item.rating, 0) / exam.reviews.length;
+
+        await exam.save();
+        await exam.populate("reviews.user", "displayName avatarURL username email");
+
+        res.status(201).json(exam);
+    } catch (error) {
+        console.log("Error adding review:", error);
+        res.status(500).json({ message: "Error adding review" })
     }
 };

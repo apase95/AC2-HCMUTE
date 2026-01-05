@@ -17,6 +17,8 @@ interface PreviewExamFormProps {
     onCloseFilter: () => void;
     onSelectFilter: (filter: string) => void;
     onStartPart: (partIndex: number) => void;
+    userScore: number;
+    onSubmitReview: (rating: number, comment: string) => void;
 }
 
 export const PreviewExamForm = (props: PreviewExamFormProps) => {
@@ -44,11 +46,21 @@ export const PreviewExamForm = (props: PreviewExamFormProps) => {
         },
     ];
 
+    const [rating, setRating] = useState(0);
+    const [comment, setComment] = useState("");
+    const canReview = props.userScore >= 80;
+
+    const handlePostReview = () => {
+        if (rating === 0 || comment.trim() === "") return alert("Please rate and write a comment");
+        props.onSubmitReview(rating, comment);
+        setRating(0);
+        setComment("");
+    };
+
     const ExamInfo = [
         {
             icon: <CiWarning size={22} className="text-yellow-300" />,
-            label: `Last updated ${new Date(props.exam.updatedAt || props.exam.createdAt)
-                .toLocaleDateString("en-US", {
+            label: `Last updated ${new Date(props.exam.updatedAt || props.exam.createdAt).toLocaleDateString("en-US", {
                 month: "long",
                 year: "numeric",
             })}`,
@@ -149,8 +161,96 @@ export const PreviewExamForm = (props: PreviewExamFormProps) => {
                         )}
                     </div>
 
-                    <div className="w-full mt-6 border-t border-white/30 pt-6">
-                        <h2 className="text-xl font-semibold text-white mb-4">Comments & Discussion</h2>
+                    <div className="w-full mt-10 border-t border-white/30 pt-6">
+                        <h2 className="text-xl font-semibold text-white mb-4">Comments & Reviews</h2>
+
+                        {/* Input Form */}
+                        <div className="bg-black/30 p-4 rounded-lg mb-6">
+                            {!canReview ? (
+                                <p className="text-red-400 text-sm italic mb-2">
+                                    * You need to achieve at least 80% score to write a review. (Your best:{" "}
+                                    {props.userScore}%)
+                                </p>
+                            ) : (
+                                <div className="flex items-center gap-2 mb-3">
+                                    <span className="text-gray-300 text-sm">Your Rating:</span>
+                                    {[1, 2, 3, 4, 5].map((star) => (
+                                        <button key={star} onClick={() => setRating(star)}>
+                                            <FaStar
+                                                className={star <= rating ? "text-yellow-400" : "text-gray-600"}
+                                                size={18}
+                                            />
+                                        </button>
+                                    ))}
+                                </div>
+                            )}
+
+                            <div className="flex gap-2">
+                                <input
+                                    disabled={!canReview}
+                                    value={comment}
+                                    onChange={(e) => setComment(e.target.value)}
+                                    className={`flex-1 bg-transparent text-white border border-gray-600
+                        rounded-lg px-4 py-2 shadow-inner focus:outline-none focus:border-secondary
+                        placeholder:text-gray-500 transition-all-300 ${
+                            !canReview ? "opacity-50 cursor-not-allowed" : ""
+                        }`}
+                                    placeholder={canReview ? "Write a review..." : "Complete exam to review"}
+                                />
+
+                                <ButtonBase
+                                    name="Post"
+                                    width="w-24"
+                                    textColor="text-white"
+                                    bgColor={canReview ? "bg-secondary/80" : "bg-gray-700"}
+                                    hoverBgColor={canReview ? "hover:bg-secondary/40" : ""}
+                                    subClassName={`font-semibold rounded-lg ${!canReview ? "cursor-not-allowed" : ""}`}
+                                    onClick={handlePostReview}
+                                    disabled={!canReview}
+                                />
+                            </div>
+                        </div>
+
+                        {/* List Reviews */}
+                        <div className="space-y-4">
+                            {props.exam.reviews && props.exam.reviews.length > 0 ? (
+                                props.exam.reviews.map((review) => (
+                                    <div key={review._id} className="bg-white/5 p-4 rounded-lg border border-white/10">
+                                        <div className="flex justify-between items-start mb-2">
+                                            <div className="flex items-center gap-2">
+                                                <img
+                                                    src={review.user?.avatarURL || "/logo.jpg"}
+                                                    className="w-6 h-6 rounded-full"
+                                                />
+                                                <span className="font-bold text-sm text-white">
+                                                    {review.user?.displayName || "User"}
+                                                </span>
+                                            </div>
+                                            <div className="flex text-yellow-400 text-xs">
+                                                {[...Array(5)].map((_, i) => (
+                                                    <FaStar
+                                                        key={i}
+                                                        className={
+                                                            i < review.rating ? "text-yellow-400" : "text-gray-700"
+                                                        }
+                                                    />
+                                                ))}
+                                            </div>
+                                        </div>
+                                        <p className="text-gray-300 text-sm">{review.comment}</p>
+                                        <span className="text-xs text-gray-600 mt-2 block">
+                                            {new Date(review.createdAt).toLocaleDateString()}
+                                        </span>
+                                    </div>
+                                ))
+                            ) : (
+                                <p className="text-gray-500 text-sm text-center">No reviews yet.</p>
+                            )}
+                        </div>
+                    </div>
+
+                    {/* <div className="w-full mt-6 border-t border-white/30 pt-6">
+                        <h2 className="text-xl font-semibold text-white mb-4">Comments & Reviews</h2>
 
                         <div className="flex gap-2 relative">
                             <input
@@ -208,7 +308,7 @@ export const PreviewExamForm = (props: PreviewExamFormProps) => {
                         <div className="text-gray-200 text-sm text-center py-4 italic">
                             Start the exam to view all questions.
                         </div>
-                    </div>
+                    </div> */}
                 </div>
             </div>
         </div>

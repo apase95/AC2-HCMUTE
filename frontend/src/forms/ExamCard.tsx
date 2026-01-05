@@ -1,4 +1,4 @@
-import { FaStar } from "react-icons/fa";
+import { FaStar, FaStarHalfAlt, FaRegStar } from "react-icons/fa";
 import type { ExamType } from "../Types";
 import { useNavigate } from "react-router-dom";
 import { IoMdMore } from "react-icons/io";
@@ -38,6 +38,21 @@ export const ExamCard = ({
 
     useClickOutside(menuRef, () => setIsOpen(false));
     
+    const renderStars = (rating: number = 0) => {
+        const stars = [];
+        const roundedRating = Math.round(rating * 2) / 2;
+        for (let i = 1; i <= 5; ++i) {
+            if (roundedRating >= i) {
+                stars.push(<FaStar key={i} size={12} className="text-yellow-400" />);
+            } else if (roundedRating >= i - 0.5) {
+                stars.push(<FaStarHalfAlt key={i} size={12} className="text-yellow-400" />);
+            } else {
+                stars.push(<FaRegStar key={i} size={12} className="text-gray-500" />);
+            }
+        }
+        return stars;
+    }
+
     const handleStartExam = (e: React.MouseEvent<HTMLButtonElement>) => {
         if ((e.target as HTMLElement).closest('.more-btn')) return;
         navigate(`/exams/${data._id}`);
@@ -111,9 +126,7 @@ export const ExamCard = ({
                     {data.completionCount ? `${data.completionCount}% complete` : "Start Course"}
                 </span>
                 <div className="flex text-yellow-300 gap-0.5">
-                    {[...Array(5)].map((_, i) => (
-                        <FaStar key={i} size={12} />
-                    ))}
+                    {renderStars(data.rating)}
                 </div>
             </div>
         </button>

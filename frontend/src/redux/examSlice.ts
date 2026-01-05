@@ -37,6 +37,30 @@ export const fetchExamById = createAsyncThunk(
     }
 );
 
+export const addExamReview = createAsyncThunk(
+    "exams/addReview",
+    async ({ id, rating, comment } : { id: string; rating: number; comment: string }, { rejectWithValue }) => {
+        try {
+            const response = await api.post(`/exams/${id}/review`, { rating, comment });
+            return response.data;
+        } catch (error: any) {
+            return rejectWithValue(error.response?.data?.message || "Failed to add review");
+        }
+    }
+);
+
+export const submitExamResult = createAsyncThunk(
+    "exams/submitScore",
+    async ({ id, score } : { id: string; score: number }, { rejectWithValue }) => {
+        try {
+            const response = await api.post(`/exams/${id}/score`, { score });
+            return { id, score: response.data.highScore, submittedCount: response.data.submittedCount };
+        } catch (error: any) {
+            return rejectWithValue("Failed to save score");
+        }
+    }
+);
+
 const examSlice = createSlice({
     name: "exams",
     initialState,
@@ -69,6 +93,28 @@ const examSlice = createSlice({
             .addCase(fetchExamById.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.payload as string;
+            });
+
+        builder
+            .addCase(addExamReview.fulfilled, (state, action) => {
+                state.currentItem = action.payload;
+            });
+        
+        builder
+            .addCase(submitExamResult.fulfilled, (state, action) => {
+                if (state.currentItem && state.currentItem._id === action.payload.id) {
+                    if (!state.currentItem.userScores) {
+                        state.currentItem.userScores = {};
+                    }
+                    state.currentItem.userScores[state.currentItem._id] = action.payload.score;
+                    state.currentItem.submittedCount = action.payload.submittedCount;
+                }
+                const examIndexList = state.items.find(e => e._id === action.payload.id);
+                if (examIndexList) {
+                    if (!examIndexList.userScores) examIndexList.userScores = {};
+                    examIndexList.completionCount = action.payload.score;
+                    examIndexList.submittedCount = action.payload.submittedCount;
+                }
             });
     },
 });

@@ -32,6 +32,29 @@ const partSchema = new mongoose.Schema({
     questions: [questionSchema]
 }, { _id: false });
 
+const reviewSchema = new mongoose.Schema({
+    user: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+        required: true,
+    },
+    rating: {
+        type: Number,
+        required: true,
+        min: 1,
+        max: 5,
+    },
+    comment: {
+        type: String,
+        required: true,
+    },
+    createdAt: {
+        type: Date,
+        default: Date.now,
+    }
+});
+
+
 const examSchema = new mongoose.Schema({
     title: {
         type: String,
@@ -80,6 +103,12 @@ const examSchema = new mongoose.Schema({
         default: 0
     },
     parts: [partSchema],
+    reviews: [reviewSchema],
+    userScores: {
+        type: Map,
+        of: Number,
+        default: {}
+    }
 }, { timestamps: true });
 
 const Exam = mongoose.model("Exam", examSchema);
