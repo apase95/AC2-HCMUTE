@@ -41,12 +41,13 @@ export const PreviewExamPage = () => {
         setIsFilterOpen(false);
     };
 
-    let userScore =  0;
-    if (currentItem && user) {
-        if (currentItem.userScores && currentItem.userScores[user._id]) {
+    let userScore = 0;
+    if (currentItem) {
+        if (currentItem.completionCount !== undefined) {
+            userScore = currentItem.completionCount;
+        } 
+        else if (user && currentItem.userScores && currentItem.userScores[user._id]) {
             userScore = currentItem.userScores[user._id];
-        } else if (currentItem.completionCount) {
-             userScore = currentItem.completionCount;
         }
     }
 
@@ -72,6 +73,7 @@ export const PreviewExamPage = () => {
                 onCloseFilter={handleCloseFilter}
                 onSelectFilter={handleSelectFilter}
                 userScore={userScore}
+                completionCount={currentItem.completionCount || 0}
                 onSubmitReview={handleSubmitReview}
             />
         </>

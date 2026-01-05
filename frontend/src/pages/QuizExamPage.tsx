@@ -44,25 +44,23 @@ export const QuizExamPage = () => {
     const [timeLeft, setTimeLeft] = useState(90 * 60); 
     const [isSubmitted, setIsSubmitted] = useState(false);
 
-    const handleFinish = (forceSubmit = false) => {
+    const handleFinish = async (forceSubmit = false) => {
         if (!isSubmitted) {
-            if (forceSubmit || confirm("Are you sure you want to submit? You cannot change answers afterwards.")) {
+            if (forceSubmit || confirm("Are you sure you want to submit?")) {
                 setIsSubmitted(true);
 
-                let correctQ = 0;
-                allQuestions.forEach(q => {
-                    const uAns = userAnswers[q.id] || [];
+                const correctCount = allQuestions.reduce((acc, q) => {
+                    const userAnswer = userAnswers[q.id] || [];
                     const isCorrect = 
-                        uAns.length === q.correctAnswers.length &&
-                        uAns.slice().sort().toString() === [...q.correctAnswers].sort().toString();
-                    
-                    if (isCorrect) correctQ++;
-                });
+                        userAnswer.length === q.correctAnswers.length &&
+                        userAnswer.sort().toString() === [...q.correctAnswers].sort().toString();
+                    return isCorrect ? acc + 1 : acc;
+                }, 0);
 
-                const scorePercent = Math.round((correctQ / allQuestions.length) * 100);
+                const scorePercent = Math.round((correctCount / allQuestions.length) * 100);
 
                 if (id) {
-                    dispatch(submitExamResult({ id, score: scorePercent }));
+                    await dispatch(submitExamResult({ id, score: scorePercent }));
                 }
             }
         }

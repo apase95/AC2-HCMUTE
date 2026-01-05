@@ -19,6 +19,7 @@ interface PreviewExamFormProps {
     onStartPart: (partIndex: number) => void;
     userScore: number;
     onSubmitReview: (rating: number, comment: string) => void;
+    completionCount: number,
 }
 
 export const PreviewExamForm = (props: PreviewExamFormProps) => {
@@ -48,7 +49,9 @@ export const PreviewExamForm = (props: PreviewExamFormProps) => {
 
     const [rating, setRating] = useState(0);
     const [comment, setComment] = useState("");
-    const canReview = props.userScore >= 80;
+    const canReview = props.userScore >= 0;
+
+    console.log("User Score:", props.userScore, "Completion:", props.completionCount);
 
     const handlePostReview = () => {
         if (rating === 0 || comment.trim() === "") return alert("Please rate and write a comment");
@@ -161,19 +164,19 @@ export const PreviewExamForm = (props: PreviewExamFormProps) => {
                         )}
                     </div>
 
-                    <div className="w-full mt-10 border-t border-white/30 pt-6">
+                    <div className="w-full mt-10 border-t border-white/40 pt-6">
                         <h2 className="text-xl font-semibold text-white mb-4">Comments & Reviews</h2>
 
                         {/* Input Form */}
-                        <div className="bg-black/30 p-4 rounded-lg mb-6">
+                        <div className="bg-white/5 p-4 rounded-lg mb-6 border border-white/40">
                             {!canReview ? (
-                                <p className="text-red-400 text-sm italic mb-2">
-                                    * You need to achieve at least 80% score to write a review. (Your best:{" "}
+                                <p className="text-red-600 text-sm italic mb-2">
+                                    *You need to achieve at least 80% score to write a review. (Your best:{" "}
                                     {props.userScore}%)
                                 </p>
                             ) : (
                                 <div className="flex items-center gap-2 mb-3">
-                                    <span className="text-gray-300 text-sm">Your Rating:</span>
+                                    <span className="text-gray-300 text-sm font-semibold">Your Rating:</span>
                                     {[1, 2, 3, 4, 5].map((star) => (
                                         <button key={star} onClick={() => setRating(star)}>
                                             <FaStar
@@ -190,11 +193,11 @@ export const PreviewExamForm = (props: PreviewExamFormProps) => {
                                     disabled={!canReview}
                                     value={comment}
                                     onChange={(e) => setComment(e.target.value)}
-                                    className={`flex-1 bg-transparent text-white border border-gray-600
-                        rounded-lg px-4 py-2 shadow-inner focus:outline-none focus:border-secondary
-                        placeholder:text-gray-500 transition-all-300 ${
-                            !canReview ? "opacity-50 cursor-not-allowed" : ""
-                        }`}
+                                    className={`flex-1 bg-transparent text-white border border-white/40
+                                        rounded-lg px-4 py-2 shadow-inner focus:outline-none focus:border-white/80
+                                        placeholder:text-gray-500 transition-all-300 ${
+                                        !canReview ? "opacity-50 cursor-not-allowed" : ""
+                                    }`}
                                     placeholder={canReview ? "Write a review..." : "Complete exam to review"}
                                 />
 
@@ -215,7 +218,7 @@ export const PreviewExamForm = (props: PreviewExamFormProps) => {
                         <div className="space-y-4">
                             {props.exam.reviews && props.exam.reviews.length > 0 ? (
                                 props.exam.reviews.map((review) => (
-                                    <div key={review._id} className="bg-white/5 p-4 rounded-lg border border-white/10">
+                                    <div key={review._id} className="bg-white/5 p-4 rounded-lg border border-white/40">
                                         <div className="flex justify-between items-start mb-2">
                                             <div className="flex items-center gap-2">
                                                 <img
@@ -237,78 +240,17 @@ export const PreviewExamForm = (props: PreviewExamFormProps) => {
                                                 ))}
                                             </div>
                                         </div>
-                                        <p className="text-gray-300 text-sm">{review.comment}</p>
-                                        <span className="text-xs text-gray-600 mt-2 block">
+                                        <p className="text-white text-sm">{review.comment}</p>
+                                        <span className="text-xs text-gray-400 mt-2 block">
                                             {new Date(review.createdAt).toLocaleDateString()}
                                         </span>
                                     </div>
                                 ))
                             ) : (
-                                <p className="text-gray-500 text-sm text-center">No reviews yet.</p>
+                                <p className="text-gray-400 text-sm text-center">No reviews yet.</p>
                             )}
                         </div>
                     </div>
-
-                    {/* <div className="w-full mt-6 border-t border-white/30 pt-6">
-                        <h2 className="text-xl font-semibold text-white mb-4">Comments & Reviews</h2>
-
-                        <div className="flex gap-2 relative">
-                            <input
-                                className="flex-1 bg-black/30 text-white border border-gray-600
-                                rounded-lg px-4 py-2 shadow-inner focus:outline-none 
-                                focus:border-secondary focus:ring-1 focus:ring-secondary
-                                placeholder:text-gray-300 transition-all-300"
-                                placeholder="Write a comment..."
-                            />
-
-                            <ButtonBase
-                                name="Post"
-                                width="w-24"
-                                textColor="text-white"
-                                bgColor="bg-secondary/80"
-                                hoverBgColor="hover:bg-secondary/40"
-                                subClassName="font-semibold rounded-lg"
-                            />
-
-                            <div className="relative" ref={filterRef}>
-                                <ButtonBrand
-                                    width="w-12"
-                                    name=""
-                                    icon={<MdFilterListAlt size="22" />}
-                                    textColor="text-gray-200"
-                                    hoverBgColor="hover:text-white hover:bg-gray-300/30"
-                                    subClassName="border border-gray-200/60"
-                                    onClick={props.onToggleFilter}
-                                />
-
-                                {props.isFilterOpen && (
-                                    <div className="absolute right-0 top-full mt-2 w-48 bg-neutral-800/80 rounded-lg z-50 overflow-hidden  animate-fade-in-up">
-                                        <div className="flex flex-col p-1">
-                                            {["Newest First", "Oldest First", "Top Rated"].map((option) => (
-                                                <button
-                                                    key={option}
-                                                    onClick={() => props.onSelectFilter(option)}
-                                                    className="w-full text-left px-4 py-2.5 text-sm text-white hover:bg-white/10 transition-colors"
-                                                >
-                                                    {option}
-                                                </button>
-                                            ))}
-                                        </div>
-                                    </div>
-                                )}
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className="mt-8 w-full">
-                        <div className="flex items-center justify-between text-white border-b border-white/10 pb-2 mb-4">
-                            <h2 className="text-lg font-semibold">Questions in this exam</h2>
-                            <span className="bg-white/10 px-2 py-0.5 rounded text-sm text-gray-300">0 Questions</span>
-                        </div>
-                        <div className="text-gray-200 text-sm text-center py-4 italic">
-                            Start the exam to view all questions.
-                        </div>
-                    </div> */}
                 </div>
             </div>
         </div>

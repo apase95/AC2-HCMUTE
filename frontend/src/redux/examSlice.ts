@@ -106,14 +106,13 @@ const examSlice = createSlice({
                     if (!state.currentItem.userScores) {
                         state.currentItem.userScores = {};
                     }
-                    state.currentItem.userScores[state.currentItem._id] = action.payload.score;
+                    state.currentItem.completionCount = action.payload.score;
                     state.currentItem.submittedCount = action.payload.submittedCount;
                 }
-                const examIndexList = state.items.find(e => e._id === action.payload.id);
-                if (examIndexList) {
-                    if (!examIndexList.userScores) examIndexList.userScores = {};
-                    examIndexList.completionCount = action.payload.score;
-                    examIndexList.submittedCount = action.payload.submittedCount;
+                const examInList = state.items.find(e => e._id === action.payload.id);
+                if (examInList) {
+                    examInList.completionCount = action.payload.score;
+                    examInList.submittedCount = action.payload.submittedCount;
                 }
             });
     },

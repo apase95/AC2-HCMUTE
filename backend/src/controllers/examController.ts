@@ -218,7 +218,7 @@ export const deleteExam = async (req, res) => {
 export const submitExamScore = async (req, res) => {
     try {
         const { id } = req.params;
-        const { score, partId } = req.body;
+        const { score } = req.body;
         const userId = req.user._id.toString();
 
         const exam = await Exam.findById(id);
@@ -229,13 +229,16 @@ export const submitExamScore = async (req, res) => {
         if (score > currentHighScore) {
             exam.userScores.set(userId, score);
         }
+        exam.markModified('userScores'); 
         await exam.save();
         res.status(200).json({ 
             message: "Score saved",
+            id: exam._id,
             highScore: Math.max(score, currentHighScore),
             submittedCount: exam.submittedCount,
         });
     } catch (error) {
+        console.error("Error saving score:", error);
         res.status(500).json({ message: "Error Saving Score" });
     }
 };
@@ -250,15 +253,23 @@ export const addReview = async (req, res) => {
         if (!exam) return res.status(404).json({ message: "Exam not found" });
 
         const userHighScore = exam.userScores.get(userId) || 0;
-        if (userHighScore < 80) return res.status(403).json({ message: "You must achieve 80% score to review" });
+        if (userHighScore < 80) {
+            return res.status(403).json({ message: `
+                You need at least 80% score to review. 
+                Your best: ${userHighScore}%` 
+            });
+        }
 
         const alreadyReviewed = exam.reviews.find(r => r.user.toString() === userId);
         if (alreadyReviewed) return res.status(400).json({ message: "You have already reviewed this exam" });
 
         const newReview = { user: userId, rating: Number(rating), comment };
         exam.reviews.push(newReview);
+
+
+        const totalRating = exam.reviews.reduce((sum, r) => sum + r.rating, 0);
+        exam.rating = totalRating / exam.reviews.length;
         exam.ratingCount = exam.reviews.length;
-        exam.rating = exam.reviews.reduce((acc, item) => acc + item.rating, 0) / exam.reviews.length;
 
         await exam.save();
         await exam.populate("reviews.user", "displayName avatarURL username email");
