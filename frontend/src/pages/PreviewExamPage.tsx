@@ -52,8 +52,7 @@ export const PreviewExamPage = () => {
             }
         }
     }
-    const completionCount = Math.max(currentItem?.completionCount || 0, userScore) || 0;
-    
+        
     const handleSubmitReview = (rating: number, comment: string) => {
         if (currentItem) {
             dispatch(addExamReview({ id: currentItem._id, rating, comment }));
@@ -76,7 +75,6 @@ export const PreviewExamPage = () => {
                 onCloseFilter={handleCloseFilter}
                 onSelectFilter={handleSelectFilter}
                 userScore={userScore}
-                completionCount={completionCount}
                 onSubmitReview={handleSubmitReview}
             />
         </>

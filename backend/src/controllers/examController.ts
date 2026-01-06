@@ -23,15 +23,38 @@ const formatExamResponse = (exam: any) => {
         
         const displayName = toTitleCase(rawName);
         
-        return {
-            ...examObj,
-            author: {
-                _id: examObj.author._id,
-                displayName: displayName,
-                avatarURL: examObj.author.avatarURL || "",
-            }
+        examObj.author = {
+            _id: examObj.author._id,
+            displayName: displayName,
+            avatarURL: examObj.author.avatarURL || "",
         };
     }
+
+    if (examObj.reviews && Array.isArray(examObj.reviews)) {
+        examObj.reviews = examObj.reviews.map((review: any) => {
+            if (review.user && typeof review.user === 'object') {
+                const firstName = review.user.firstName || "";
+                const lastName = review.user.lastName || "";
+                let rawName = `${firstName} ${lastName}`.trim();
+
+                if (!rawName) {
+                    rawName = review.user.username || review.user.email || "Unknown User";
+                }
+
+                const displayName = toTitleCase(rawName);
+                return {
+                    ...review,
+                    user: {
+                        _id: review.user._id,
+                        displayName: displayName,
+                        avatarURL: review.user.avatarURL || "",
+                    }
+                };
+            }
+            return review;
+        });
+    }
+
     return examObj;
 };
 
@@ -107,6 +130,7 @@ export const getAllExams = async (req, res) => {
     try {
         const exams = await Exam.find()
             .populate("author", "firstName lastName avatarURL username email")
+            .populate("reviews.user", "firstName lastName avatarURL username email")
             .sort({ createdAt: -1 });
         
         const formattedExams = exams.map(exam => formatExamResponse(exam));
@@ -121,7 +145,8 @@ export const getExamById = async (req, res) => {
     try {
         const { id } = req.params;
         const exam = await Exam.findById(id)
-            .populate("author", "firstName lastName avatarURL username email");
+            .populate("author", "firstName lastName avatarURL username email")
+            .populate("reviews.user", "firstName lastName avatarURL username email");
         if (!exam) {
             return res.status(404).json({ message: "Exam not found" });
         }
@@ -185,13 +210,14 @@ export const updateExam = async (req, res) => {
         }
         if (completionCount) exam.completionCount = completionCount;
         if (rating) exam.rating = rating;
-        if (ratingCount) exam.ratingCount = ratingCount;
+        if (ratingCount) exam.ratingsCount = ratingCount;
         if (submittedCount) exam.submittedCount = submittedCount;
         if (totalTime) exam.totalTime = totalTime;
         if (language) exam.language = language;
 
         await exam.save();
         await exam.populate("author", "firstName lastName avatarURL username email");
+        await exam.populate("reviews.user", "firstName lastName avatarURL username email");
         res.status(200).json(formatExamResponse(exam));
     } catch (error) {
         console.error("Error updating exam:", error);
@@ -313,12 +339,12 @@ export const addReview = async (req, res) => {
 
         const totalRating = exam.reviews.reduce((sum, r) => sum + r.rating, 0);
         exam.rating = totalRating / exam.reviews.length;
-        exam.ratingCount = exam.reviews.length;
+        exam.ratingsCount = exam.reviews.length;
 
         await exam.save();
-        await exam.populate("reviews.user", "displayName avatarURL username email");
+        await exam.populate("reviews.user", "firstName lastName avatarURL username email");
 
-        res.status(201).json(exam);
+        res.status(201).json(formatExamResponse(exam));
     } catch (error) {
         console.log("Error adding review:", error);
         res.status(500).json({ message: "Error adding review" })

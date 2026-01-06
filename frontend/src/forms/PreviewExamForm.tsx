@@ -17,7 +17,6 @@ interface PreviewExamFormProps {
     onStartPart: (partIndex: number) => void;
     userScore: number;
     onSubmitReview: (rating: number, comment: string) => void;
-    completionCount: number,
 }
 
 export const PreviewExamForm = (props: PreviewExamFormProps) => {
@@ -69,8 +68,6 @@ export const PreviewExamForm = (props: PreviewExamFormProps) => {
             label: `Language: ${props.exam.language || "English"}`,
         },
     ];
-
-    console.log(props.exam);
 
     return (
         <div className="relative min-h-screen h-auto w-full grid-pattern">

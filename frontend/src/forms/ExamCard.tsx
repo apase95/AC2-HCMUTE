@@ -28,8 +28,7 @@ export const ExamCard = ({
     data,
 }: ExamCardProps) => {
     const navigate = useNavigate();
-    const progress = Math.min(Math.max(data.completionCount || 0, 0), 100);
-    
+
     const { user } = useSelector((state: RootState) => state.auth);
     const isOwnerOrAdmin = user && data.author && (user.role === 'admin' || user._id === data.author._id);
     
@@ -37,6 +36,18 @@ export const ExamCard = ({
     const menuRef = useRef<HTMLDivElement>(null);
 
     useClickOutside(menuRef, () => setIsOpen(false));
+    
+    let userScore = 0;
+    if (user?._id && data.userScores) {
+        const scoreData = data.userScores[user._id];
+        if (typeof scoreData === 'number') {
+            userScore = scoreData;
+        } else if (scoreData && typeof scoreData === 'object') {
+            userScore = scoreData.total || 0;
+        }
+    }
+
+    const progress = Math.min(Math.max(userScore, 0), 100);
     
     const renderStars = (rating: number = 0) => {
         const stars = [];
@@ -123,7 +134,7 @@ export const ExamCard = ({
 
             <div className="w-full px-4 pt-1 flex-between flex-row">
                 <span className="text-white/80 text-xs font-semibold">
-                    {data.completionCount ? `${data.completionCount}% complete` : "Start Course"}
+                    {userScore > 0 ? `${userScore}% Score` : "Start Course"}
                 </span>
                 <div className="flex text-yellow-300 gap-0.5">
                     {renderStars(data.rating)}
