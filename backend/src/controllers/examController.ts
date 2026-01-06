@@ -2,27 +2,31 @@ import Exam from "../models/Exam.ts";
 
 const toTitleCase = (str: string) => {
     if (!str) return "";
-    return str.toLowerCase().split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+    return str
+        .toLowerCase()
+        .split(" ")
+        .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(" ");
 };
 
 const formatExamResponse = (exam: any) => {
     const examObj = exam.toObject ? exam.toObject() : exam;
-    
+
     if (examObj.userScores && examObj.userScores instanceof Map) {
         examObj.userScores = Object.fromEntries(examObj.userScores);
     }
 
-    if (examObj.author && typeof examObj.author === 'object') {
+    if (examObj.author && typeof examObj.author === "object") {
         const firstName = examObj.author.firstName || "";
         const lastName = examObj.author.lastName || "";
         let rawName = `${firstName} ${lastName}`.trim();
-        
+
         if (!rawName) {
             rawName = examObj.author.username || examObj.author.email || "Unknown Author";
         }
-        
+
         const displayName = toTitleCase(rawName);
-        
+
         examObj.author = {
             _id: examObj.author._id,
             displayName: displayName,
@@ -32,7 +36,7 @@ const formatExamResponse = (exam: any) => {
 
     if (examObj.reviews && Array.isArray(examObj.reviews)) {
         examObj.reviews = examObj.reviews.map((review: any) => {
-            if (review.user && typeof review.user === 'object') {
+            if (review.user && typeof review.user === "object") {
                 const firstName = review.user.firstName || "";
                 const lastName = review.user.lastName || "";
                 let rawName = `${firstName} ${lastName}`.trim();
@@ -48,7 +52,7 @@ const formatExamResponse = (exam: any) => {
                         _id: review.user._id,
                         displayName: displayName,
                         avatarURL: review.user.avatarURL || "",
-                    }
+                    },
                 };
             }
             return review;
@@ -63,19 +67,9 @@ export const createExam = async (req, res) => {
         if (!req.user || !req.user._id) {
             return res.status(401).json({ message: "Unauthorized" });
         }
-        const { 
-            title, 
-            content, 
-            coverImage, 
-            tags, 
-            parts, 
-            rating, 
-            ratingCount, 
-            submittedCount, 
-            totalTime, 
-            language 
-        } = req.body;
-        
+        const { title, content, coverImage, tags, parts, rating, ratingCount, submittedCount, totalTime, language } =
+            req.body;
+
         let newExam = await Exam.create({
             title,
             content,
@@ -88,11 +82,11 @@ export const createExam = async (req, res) => {
             submittedCount: submittedCount || 0,
             totalTime: totalTime || 0,
             language: language || "en",
-            completionCount: 0
+            completionCount: 0,
         });
 
         newExam = await newExam.populate("author", "firstName lastName avatarURL username email");
-        
+
         res.status(201).json(formatExamResponse(newExam));
     } catch (error) {
         console.error("Error creating exam:", error);
@@ -132,8 +126,8 @@ export const getAllExams = async (req, res) => {
             .populate("author", "firstName lastName avatarURL username email")
             .populate("reviews.user", "firstName lastName avatarURL username email")
             .sort({ createdAt: -1 });
-        
-        const formattedExams = exams.map(exam => formatExamResponse(exam));
+
+        const formattedExams = exams.map((exam) => formatExamResponse(exam));
         res.status(200).json(formattedExams);
     } catch (error) {
         console.error("Error fetching exams:", error);
@@ -160,10 +154,18 @@ export const getExamById = async (req, res) => {
 export const updateExam = async (req, res) => {
     try {
         const { id } = req.params;
-        const { 
-            title, content, coverImage, tags, 
-            completionCount, parts,
-            rating, ratingCount, submittedCount, totalTime, language
+        const {
+            title,
+            content,
+            coverImage,
+            tags,
+            completionCount,
+            parts,
+            rating,
+            ratingCount,
+            submittedCount,
+            totalTime,
+            language,
         } = req.body;
         const userId = req.user._id.toString();
 
@@ -188,7 +190,7 @@ export const updateExam = async (req, res) => {
         if (tags) {
             if (typeof tags === "string") {
                 try {
-                    exam.tags = JSON.parse(tags);       
+                    exam.tags = JSON.parse(tags);
                 } catch (error) {
                     exam.tags = tags.split(",").map((tag: string) => tag.trim());
                 }
@@ -234,7 +236,7 @@ export const deleteExam = async (req, res) => {
         if (!exam) {
             return res.status(404).json({ message: "Exam not found" });
         }
-        if (exam.author.toString() !== userId) {
+        if (exam.author.toString() !== userId && req.user.role !== "admin") {
             return res.status(403).json({ message: "You are not the author of this exam" });
         }
         await exam.deleteOne();
@@ -255,9 +257,9 @@ export const submitExamScore = async (req, res) => {
         if (!exam) return res.status(404).json({ message: "Exam not found" });
 
         exam.submittedCount = (exam.submittedCount || 0) + 1;
-        
+
         let userData = exam.userScores.get(userId);
-        if (typeof userData === 'number') {
+        if (typeof userData === "number") {
             userData = { total: userData, parts: {} };
         } else if (!userData) {
             userData = { total: 0, parts: {} };
@@ -265,7 +267,7 @@ export const submitExamScore = async (req, res) => {
 
         if (partIndex !== undefined && partIndex !== -1) {
             userData.parts = userData.parts || {};
-            
+
             const currentPartScore = userData.parts[partIndex] || 0;
             if (score > currentPartScore) {
                 userData.parts[partIndex] = score;
@@ -275,25 +277,24 @@ export const submitExamScore = async (req, res) => {
             if (totalParts > 0) {
                 let sum = 0;
                 for (let i = 0; i < totalParts; i++) {
-                    sum += (userData.parts[i] || 0);
+                    sum += userData.parts[i] || 0;
                 }
                 const newTotal = Math.round(sum / totalParts);
                 userData.total = newTotal;
             } else {
                 userData.total = score;
             }
-
         } else {
             if (score > userData.total) {
                 userData.total = score;
             }
         }
-        
+
         exam.userScores.set(userId, userData);
-        exam.markModified('userScores'); 
+        exam.markModified("userScores");
         await exam.save();
-        
-        res.status(200).json({ 
+
+        res.status(200).json({
             message: "Score saved",
             id: exam._id,
             highScore: userData.total,
@@ -316,26 +317,26 @@ export const addReview = async (req, res) => {
 
         const userData = exam.userScores.get(userId);
         let userHighScore = 0;
-        
-        if (typeof userData === 'number') {
+
+        if (typeof userData === "number") {
             userHighScore = userData;
-        } else if (userData && typeof userData === 'object') {
+        } else if (userData && typeof userData === "object") {
             userHighScore = userData.total || 0;
         }
 
         if (userHighScore < 80) {
-            return res.status(403).json({ message: `
+            return res.status(403).json({
+                message: `
                 You need at least 80% score to review. 
-                Your best: ${userHighScore}%` 
+                Your best: ${userHighScore}%`,
             });
         }
 
-        const alreadyReviewed = exam.reviews.find(r => r.user.toString() === userId);
+        const alreadyReviewed = exam.reviews.find((r) => r.user.toString() === userId);
         if (alreadyReviewed) return res.status(400).json({ message: "You have already reviewed this exam" });
 
         const newReview = { user: userId, rating: Number(rating), comment };
         exam.reviews.push(newReview);
-
 
         const totalRating = exam.reviews.reduce((sum, r) => sum + r.rating, 0);
         exam.rating = totalRating / exam.reviews.length;
@@ -347,6 +348,6 @@ export const addReview = async (req, res) => {
         res.status(201).json(formatExamResponse(exam));
     } catch (error) {
         console.log("Error adding review:", error);
-        res.status(500).json({ message: "Error adding review" })
+        res.status(500).json({ message: "Error adding review" });
     }
 };

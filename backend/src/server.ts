@@ -9,6 +9,7 @@ import userRoute from "./routes/userRoute.ts";
 import blogRoute from "./routes/blogRoute.ts";
 import documentRoute from "./routes/documentRoute.ts";
 import examRoute from "./routes/examRoute.ts";
+import commentRoute from "./routes/commentRoute.ts";
 import passport from "passport";
 import "./libs/passport.ts"
 
@@ -33,6 +34,7 @@ app.use('/api/auth', authRoute);
 app.use("/api/blogs", blogRoute);
 app.use("/api/documents", documentRoute);
 app.use("/api/exams", examRoute); 
+app.use("/api/comments", commentRoute); 
 
 //Private routes
 app.use(protectedRoute);

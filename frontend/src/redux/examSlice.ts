@@ -61,6 +61,20 @@ export const submitExamResult = createAsyncThunk(
     }
 );
 
+// ... (existing code)
+
+export const deleteExam = createAsyncThunk(
+    "exams/deleteExam",
+    async (id: string, { rejectWithValue }) => {
+        try {
+            await api.delete(`/exams/${id}`);
+            return id;
+        } catch (error: any) {
+            return rejectWithValue(error.response?.data?.message || "Failed to delete exam");
+        }
+    }
+);
+
 const examSlice = createSlice({
     name: "exams",
     initialState,
@@ -114,6 +128,11 @@ const examSlice = createSlice({
                     examInList.completionCount = action.payload.score;
                     examInList.submittedCount = action.payload.submittedCount;
                 }
+            });
+        
+        builder
+            .addCase(deleteExam.fulfilled, (state, action) => {
+                state.items = state.items.filter(exam => exam._id !== action.payload);
             });
     },
 });

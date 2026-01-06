@@ -24,24 +24,20 @@ export const PostDetailPage = () => {
         if (isBlog) dispatch(fetchBlogById(id));
         else dispatch(fetchDocumentById(id));
         return () => {
-            if (isBlog) dispatch(clearBlog())
+            if (isBlog) dispatch(clearBlog());
             else dispatch(clearDoc());
-        }
+        };
     }, [id, isBlog, dispatch]);
 
     if (error) return <ErrorComponent error={error} />;
 
     if (!currentItem) {
-        return <PostDetailForm 
-            loading={true} title="" 
-            content="" authorName="" 
-            createdAt="" readTime="" tags={[]}
-        />;
+        return <PostDetailForm loading={true} title="" content="" authorName="" createdAt="" readTime="" tags={[]} />;
     }
 
     return (
         <>
-            <PostDetailForm 
+            <PostDetailForm
                 loading={loading}
                 title={currentItem.title}
                 content={currentItem.content}
@@ -51,7 +47,10 @@ export const PostDetailPage = () => {
                 createdAt={currentItem.createdAt}
                 readTime={currentItem.readTime || "5 minutes"}
                 tags={currentItem.tags || []}
+                id={currentItem._id}
+                authorId={currentItem.author?._id}
+                type={isBlog ? "Blog" : "DocumentSchema"}
             />
         </>
-  )
-}
+    );
+};

@@ -7,6 +7,10 @@ import { PopupMoreOption } from "./PopupMoreOption";
 import { useClickOutside } from "../hooks/useClickOutside";
 import type { RootState } from "../redux/store";
 import { useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
+import type { AppDispatch } from "../redux/store";
+import { deleteBlog } from "../redux/blogSlice";
+import { deleteDocument } from "../redux/documentSlice";
 
 interface CardProps {
   id?: string;
@@ -27,10 +31,12 @@ interface CardProps {
   disableZoom?: boolean;
 }
 
+
 export const CardBlog : React.FC<CardProps> = (props: CardProps) => {
   
   
   const navigate = useNavigate();
+  const dispatch = useDispatch<AppDispatch>();
   const zoomClass = props.disableZoom ? "" : "hover:scale-105";
   const { user } = useSelector((state: RootState) => state.auth);
   const isOwnerOrAdmin = user && (user.role === 'admin' || user._id === props.authorId);
@@ -47,8 +53,14 @@ export const CardBlog : React.FC<CardProps> = (props: CardProps) => {
   }
   const handleDelete = async () => {
     setIsOpen(false);
+    if (!props.id) return;
+    
     if (confirm("Are you sure you want to delete this?")) {
-      console.log("Delete item:", props.id);
+      if (props.type === 'blog') {
+        dispatch(deleteBlog(props.id));
+      } else if (props.type === 'document') {
+        dispatch(deleteDocument(props.id));
+      }
     }
   }
   const handleEdit = () => {

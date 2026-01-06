@@ -55,6 +55,18 @@ export const fetchBlogById = createAsyncThunk(
     }
 );
 
+export const deleteBlog = createAsyncThunk(
+    "blogs/deleteBlog",
+    async (id: string, { rejectWithValue }) => {
+        try {
+            await api.delete(`/blogs/${id}`);
+            return id;
+        } catch (error: any) {
+            return rejectWithValue(error.response?.data?.message || "DELETE BLOG FAILED");
+        }
+    }
+);
+
 const blogSlice = createSlice({
     name: "blogs",
     initialState,
@@ -114,6 +126,11 @@ const blogSlice = createSlice({
             state.loading = false;
             state.error = action.payload as string;
             state.uploadSuccess = false;
+        });
+
+        // Delete
+        builder.addCase(deleteBlog.fulfilled, (state, action) => {
+            state.items = state.items.filter(blog => blog._id !== action.payload);
         });
     },
 });
