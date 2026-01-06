@@ -15,6 +15,7 @@ interface CommentListProps {
 
 export const CommentList = ({ postId, postAuthorId, onModel }: CommentListProps) => {
     const [comments, setComments] = useState<CommentType[]>([]);
+    const [visibleCount, setVisibleCount] = useState(3);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
     const [newComment, setNewComment] = useState("");
@@ -92,7 +93,7 @@ export const CommentList = ({ postId, postAuthorId, onModel }: CommentListProps)
                             className="w-full bg-white/5 border border-white/40 rounded-lg p-3 text-white focus:border-secondary focus:outline-none min-h-[100px]"
                         />
                         <ButtonBase
-                            type="submit" 
+                            type="submit"
                             onClick={handleAddComment}
                             name={"Post Comment"}
                             textColor="text-white"
@@ -111,7 +112,7 @@ export const CommentList = ({ postId, postAuthorId, onModel }: CommentListProps)
                 <LoadingSpinner />
             ) : (
                 <div className="flex flex-col gap-4">
-                    {comments.map((comment) => (
+                    {comments.slice(0, visibleCount).map((comment) => (
                         <CommentItem
                             key={comment._id}
                             comment={comment}
@@ -121,7 +122,21 @@ export const CommentList = ({ postId, postAuthorId, onModel }: CommentListProps)
                             onEdit={handleEdit}
                         />
                     ))}
-                    {comments.length === 0 && <p className="w-full text-center text-gray-200 italic">No comments yet.</p>}
+                    {comments.length === 0 && (
+                        <p className="w-full text-center text-gray-200 italic">No comments yet.</p>
+                    )}
+
+                    {visibleCount < comments.length && (
+                        <div className="w-full flex-center">
+                            <ButtonBase
+                                name="Show More"
+                                onClick={() => setVisibleCount((prev) => prev + 3)}
+                                bgColor="transparent"
+                                hoverBgColor="hover:underline"
+                                textColor="text-white/90"
+                            />
+                        </div>
+                    )}
                 </div>
             )}
         </div>

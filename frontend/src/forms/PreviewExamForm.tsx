@@ -46,6 +46,7 @@ export const PreviewExamForm = (props: PreviewExamFormProps) => {
 
     const [rating, setRating] = useState(0);
     const [comment, setComment] = useState("");
+    const [visibleReviews, setVisibleReviews] = useState(3);
     const canReview = props.userScore >= 80;
 
     const handlePostReview = () => {
@@ -191,8 +192,8 @@ export const PreviewExamForm = (props: PreviewExamFormProps) => {
                                     className={`flex-1 bg-transparent text-white border border-white/40
                                         rounded-lg px-4 py-2 shadow-inner focus:outline-none focus:border-white/80
                                         placeholder:text-gray-500 transition-all-300 ${
-                                        !canReview ? "opacity-50 cursor-not-allowed" : ""
-                                    }`}
+                                            !canReview ? "opacity-50 cursor-not-allowed" : ""
+                                        }`}
                                     placeholder={canReview ? "Write a review..." : "Complete exam to review"}
                                 />
 
@@ -212,35 +213,52 @@ export const PreviewExamForm = (props: PreviewExamFormProps) => {
                         {/* List Reviews */}
                         <div className="space-y-4">
                             {props.exam.reviews && props.exam.reviews.length > 0 ? (
-                                props.exam.reviews.map((review) => (
-                                    <div key={review._id} className="bg-white/5 p-4 rounded-lg border border-white/40">
-                                        <div className="flex justify-between items-start mb-2">
-                                            <div className="flex items-center gap-2">
-                                                <img
-                                                    src={review.user?.avatarURL || "/logo.jpg"}
-                                                    className="w-6 h-6 rounded-full"
-                                                />
-                                                <span className="font-bold text-sm text-white">
-                                                    {review.user?.displayName || "User"}
-                                                </span>
-                                            </div>
-                                            <div className="flex text-yellow-400 text-xs">
-                                                {[...Array(5)].map((_, i) => (
-                                                    <FaStar
-                                                        key={i}
-                                                        className={
-                                                            i < review.rating ? "text-yellow-400" : "text-gray-700"
-                                                        }
+                                <>
+                                    {props.exam.reviews.slice(0, visibleReviews).map((review) => (
+                                        <div
+                                            key={review._id}
+                                            className="bg-white/5 p-4 rounded-lg border border-white/40"
+                                        >
+                                            <div className="flex justify-between items-start mb-2">
+                                                <div className="flex items-center gap-2">
+                                                    <img
+                                                        src={review.user?.avatarURL || "/logo.jpg"}
+                                                        className="w-6 h-6 rounded-full"
                                                     />
-                                                ))}
+                                                    <span className="font-bold text-sm text-white">
+                                                        {review.user?.displayName || "User"}
+                                                    </span>
+                                                </div>
+                                                <div className="flex text-yellow-400 text-xs">
+                                                    {[...Array(5)].map((_, i) => (
+                                                        <FaStar
+                                                            key={i}
+                                                            className={
+                                                                i < review.rating ? "text-yellow-400" : "text-gray-700"
+                                                            }
+                                                        />
+                                                    ))}
+                                                </div>
                                             </div>
+                                            <p className="text-white text-sm">{review.comment}</p>
+                                            <span className="text-xs text-gray-400 mt-2 block">
+                                                {new Date(review.createdAt).toLocaleDateString()}
+                                            </span>
                                         </div>
-                                        <p className="text-white text-sm">{review.comment}</p>
-                                        <span className="text-xs text-gray-400 mt-2 block">
-                                            {new Date(review.createdAt).toLocaleDateString()}
-                                        </span>
-                                    </div>
-                                ))
+                                    ))}
+
+                                    {visibleReviews < props.exam.reviews.length && (
+                                        <div className="w-full flex justify-center mt-4">
+                                            <ButtonBase
+                                                name="Show More"
+                                                onClick={() => setVisibleReviews((prev) => prev + 3)}
+                                                bgColor="transparent"
+                                                hoverBgColor="hover:underline"
+                                                textColor="text-white/80"
+                                            />
+                                        </div>
+                                    )}
+                                </>
                             ) : (
                                 <p className="text-gray-400 text-sm text-center">No reviews yet.</p>
                             )}

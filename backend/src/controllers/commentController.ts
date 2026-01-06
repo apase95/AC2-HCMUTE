@@ -3,8 +3,37 @@ import Blog from "../models/Blog.ts";
 import DocumentSchema from "../models/DocumentSchema.ts";
 import Exam from "../models/Exam.ts";
 
-const populateComment = (query) => {
-    return query.populate("author", "firstName lastName avatarURL username email");
+const toTitleCase = (str: string) => {
+    if (!str) return "";
+    return str
+        .toLowerCase()
+        .split(" ")
+        .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(" ");
+};
+
+const formatCommentResponse = (comment: any) => {
+    const commentObj = comment.toObject ? comment.toObject() : comment;
+
+    if (commentObj.author && typeof commentObj.author === "object") {
+        const firstName = commentObj.author.firstName || "";
+        const lastName = commentObj.author.lastName || "";
+        let rawName = `${firstName} ${lastName}`.trim();
+
+        if (!rawName) {
+            rawName = commentObj.author.username || commentObj.author.email || "Unknown User";
+        }
+
+        const displayName = toTitleCase(rawName);
+
+        commentObj.author = {
+            _id: commentObj.author._id,
+            displayName: displayName,
+            avatarURL: commentObj.author.avatarURL || "",
+        };
+    }
+
+    return commentObj;
 };
 
 export const createComment = async (req, res) => {
@@ -22,11 +51,11 @@ export const createComment = async (req, res) => {
             content,
             author: req.user._id,
             relatedId,
-            onModel
+            onModel,
         });
 
         await newComment.populate("author", "firstName lastName avatarURL username email");
-        res.status(201).json(newComment);
+        res.status(201).json(formatCommentResponse(newComment));
     } catch (error) {
         console.error("Error creating comment:", error);
         res.status(500).json({ message: "Internal server error" });
@@ -40,7 +69,8 @@ export const getCommentsByPostId = async (req, res) => {
             .populate("author", "firstName lastName avatarURL username email")
             .sort({ createdAt: -1 });
 
-        res.status(200).json(comments);
+        const formattedComments = comments.map((comment) => formatCommentResponse(comment));
+        res.status(200).json(formattedComments);
     } catch (error) {
         console.error("Error fetching comments:", error);
         res.status(500).json({ message: "Internal server error" });
@@ -65,8 +95,8 @@ export const editComment = async (req, res) => {
         comment.content = content;
         await comment.save();
         await comment.populate("author", "firstName lastName avatarURL username email");
-        
-        res.status(200).json(comment);
+
+        res.status(200).json(formatCommentResponse(comment));
     } catch (error) {
         console.error("Error editing comment:", error);
         res.status(500).json({ message: "Internal server error" });
@@ -89,11 +119,11 @@ export const deleteComment = async (req, res) => {
             isAuthorized = true;
         } else {
             let post = null;
-            if (comment.onModel === 'Blog') {
+            if (comment.onModel === "Blog") {
                 post = await Blog.findById(comment.relatedId);
-            } else if (comment.onModel === 'DocumentSchema') {
+            } else if (comment.onModel === "DocumentSchema") {
                 post = await DocumentSchema.findById(comment.relatedId);
-            } else if (comment.onModel === 'Exam') {
+            } else if (comment.onModel === "Exam") {
                 post = await Exam.findById(comment.relatedId);
             }
 
