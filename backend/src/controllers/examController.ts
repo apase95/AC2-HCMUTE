@@ -351,3 +351,45 @@ export const addReview = async (req, res) => {
         res.status(500).json({ message: "Error adding review" });
     }
 };
+
+export const deleteReview = async (req, res) => {
+    try {
+        const { id, reviewId } = req.params;
+        const userId = req.user._id.toString();
+
+        const exam = await Exam.findById(id);
+        if (!exam) return res.status(404).json({ message: "Exam not found" });
+
+        const reviewIndex = exam.reviews.findIndex((r) => r._id.toString() === reviewId);
+        if (reviewIndex === -1) {
+            return res.status(404).json({ message: "Review not found" });
+        }
+
+        const review = exam.reviews[reviewIndex];
+        const isReviewAuthor = review.user.toString() === userId;
+        const isExamAuthor = exam.author.toString() === userId;
+        const isAdmin = req.user.role === "admin";
+
+        if (!isReviewAuthor && !isExamAuthor && !isAdmin) {
+            return res.status(403).json({ message: "Unauthorized to delete this review" });
+        }
+
+        exam.reviews.splice(reviewIndex, 1);
+
+        if (exam.reviews.length > 0) {
+            const totalRating = exam.reviews.reduce((sum, r) => sum + r.rating, 0);
+            exam.rating = totalRating / exam.reviews.length;
+        } else {
+            exam.rating = 0;
+        }
+        exam.ratingsCount = exam.reviews.length;
+
+        await exam.save();
+        await exam.populate("reviews.user", "firstName lastName avatarURL username email");
+
+        res.status(200).json(formatExamResponse(exam));
+    } catch (error) {
+        console.error("Error deleting review:", error);
+        res.status(500).json({ message: "Error deleting review" });
+    }
+};

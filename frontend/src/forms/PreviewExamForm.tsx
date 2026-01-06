@@ -1,7 +1,7 @@
 import { useRef, useState } from "react";
-import type { ExamType } from "../Types";
+import type { ExamType, User } from "../Types";
 import { useClickOutside } from "../hooks/useClickOutside";
-import { FaChevronDown, FaChevronUp, FaStar } from "react-icons/fa6";
+import { FaChevronDown, FaChevronUp, FaStar, FaTrash } from "react-icons/fa6";
 import { CiWarning } from "react-icons/ci";
 import { AiOutlineGlobal } from "react-icons/ai";
 import { ButtonBase } from "../components/sub/ButtonBase";
@@ -17,6 +17,8 @@ interface PreviewExamFormProps {
     onStartPart: (partIndex: number) => void;
     userScore: number;
     onSubmitReview: (rating: number, comment: string) => void;
+    onDeleteReview: (reviewId: string) => void;
+    currentUser: User | null;
 }
 
 export const PreviewExamForm = (props: PreviewExamFormProps) => {
@@ -229,21 +231,38 @@ export const PreviewExamForm = (props: PreviewExamFormProps) => {
                                                         {review.user?.displayName || "User"}
                                                     </span>
                                                 </div>
-                                                <div className="flex text-yellow-400 text-xs">
-                                                    {[...Array(5)].map((_, i) => (
-                                                        <FaStar
-                                                            key={i}
-                                                            className={
-                                                                i < review.rating ? "text-yellow-400" : "text-gray-700"
-                                                            }
-                                                        />
-                                                    ))}
+                                                <div className="flex items-center gap-4">
+                                                    <div className="flex text-yellow-400 text-xs">
+                                                        {[...Array(5)].map((_, i) => (
+                                                            <FaStar
+                                                                key={i}
+                                                                className={
+                                                                    i < review.rating
+                                                                        ? "text-yellow-400"
+                                                                        : "text-gray-700"
+                                                                }
+                                                            />
+                                                        ))}
+                                                    </div>
                                                 </div>
                                             </div>
                                             <p className="text-white text-sm">{review.comment}</p>
-                                            <span className="text-xs text-gray-400 mt-2 block">
-                                                {new Date(review.createdAt).toLocaleDateString()}
-                                            </span>
+                                            <div className="w-full flex items-center justify-between">
+                                                <span className="text-xs text-gray-400 mt-2 block">
+                                                    {new Date(review.createdAt).toLocaleDateString()}
+                                                </span>
+                                                {(props.currentUser?._id === review.user?._id ||
+                                                        props.currentUser?.role === "admin" ||
+                                                        props.currentUser?._id === props.exam.author?._id) && (
+                                                        <button
+                                                            onClick={() => props.onDeleteReview(review._id)}
+                                                            className="text-white/40 hover:text-red-300 transition-colors"
+                                                            title="Delete Review"
+                                                        >
+                                                            <FaTrash size={12} />
+                                                        </button>
+                                                    )}
+                                            </div>
                                         </div>
                                     ))}
 

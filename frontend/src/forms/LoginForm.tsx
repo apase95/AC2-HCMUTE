@@ -21,9 +21,9 @@ export const LoginForm = ( props : LoginFormProps) => {
             
             <form
                 onSubmit={props.onSubmit}
-                className="absolute-center-x top-1/3 -translate-y-1/2 w-[90%] lg:w-[35%] sm:w-[90%] md:w-[70%] py-12 flex-col-center space-y-4 bg-primary/40 rounded-xl"
+                className={`absolute-center-x top-1/3 -translate-y-1/2 w-[90%] lg:w-[35%] sm:w-[90%] md:w-[70%] pb-12 ${props.error ? "pt-0" : "pt-12"} flex-col-center space-y-4 bg-primary/40 rounded-xl`}
             >
-                {props.error && <ErrorComponent error={props.error} inBlock={true} subClassName="pt-0 px-8 md:px-12" />}
+                {props.error && <ErrorComponent error={props.error} inBlock={true} subClassName="!pt-12 px-8 md:px-12" />}
                 
                 <BoxInputLogin 
                     type="email" 

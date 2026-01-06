@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import type { AppDispatch, RootState } from "../redux/store";
 import { useDispatch, useSelector } from "react-redux";
-import { addExamReview, fetchExamById } from "../redux/examSlice";
+import { addExamReview, fetchExamById, deleteExamReview } from "../redux/examSlice";
 import { LoadingSpinner } from "../components/sub/LoadingSpinner";
 import { PreviewExamForm } from "../forms/PreviewExamForm";
 import { ErrorComponent } from "../components/sub/ErrorComponent";
@@ -12,24 +12,33 @@ export const PreviewExamPage = () => {
     const { id } = useParams<{ id: string }>();
     const navigate = useNavigate();
     const dispatch = useDispatch<AppDispatch>();
-    
+
     const { user } = useSelector((state: RootState) => state.auth);
     const { currentItem, loading, error } = useSelector((state: RootState) => state.exams);
 
     const [isFilterOpen, setIsFilterOpen] = useState(false);
 
     useEffect(() => {
-        if (id) { dispatch(fetchExamById(id)); }
+        if (id) {
+            dispatch(fetchExamById(id));
+        }
     }, [id, dispatch]);
 
     const handleStartPart = (partIndex: number) => {
-        if (currentItem && confirm(`Are you sure you want to start ${partIndex === -1 ? "the entire exam" : `part ${partIndex + 1}`} of this exam?`)) {
+        if (
+            currentItem?._id &&
+            confirm(
+                `Are you sure you want to start ${
+                    partIndex === -1 ? "the entire exam" : `part ${partIndex + 1}`
+                } of this exam?`
+            )
+        ) {
             navigate(`/exams/${currentItem._id}/take`, { state: { partIndex } });
         }
     };
 
     const handleToggleFilter = () => {
-        setIsFilterOpen(prev => !prev);
+        setIsFilterOpen((prev) => !prev);
     };
 
     const handleCloseFilter = () => {
@@ -45,17 +54,23 @@ export const PreviewExamPage = () => {
     if (currentItem) {
         if (user && currentItem.userScores && currentItem.userScores[user._id]) {
             const scoreData = currentItem.userScores[user._id];
-            if (typeof scoreData === 'number') {
+            if (typeof scoreData === "number") {
                 userScore = scoreData;
-            } else if (typeof scoreData === 'object' && scoreData.total !== undefined) {
+            } else if (typeof scoreData === "object" && scoreData.total !== undefined) {
                 userScore = scoreData.total;
             }
         }
     }
-        
+
     const handleSubmitReview = (rating: number, comment: string) => {
         if (currentItem) {
             dispatch(addExamReview({ id: currentItem._id, rating, comment }));
+        }
+    };
+
+    const handleDeleteReview = (reviewId: string) => {
+        if (currentItem?._id && confirm("Are you sure you want to delete this review?")) {
+            dispatch(deleteExamReview({ examId: currentItem._id, reviewId }));
         }
     };
 
@@ -66,7 +81,7 @@ export const PreviewExamPage = () => {
     return (
         <>
             <LayoutParticles />
-            <PreviewExamForm 
+            <PreviewExamForm
                 exam={currentItem}
                 onStartExam={() => handleStartPart(-1)}
                 onStartPart={handleStartPart}
@@ -76,6 +91,8 @@ export const PreviewExamPage = () => {
                 onSelectFilter={handleSelectFilter}
                 userScore={userScore}
                 onSubmitReview={handleSubmitReview}
+                onDeleteReview={handleDeleteReview}
+                currentUser={user}
             />
         </>
     );
