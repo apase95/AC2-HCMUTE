@@ -106,7 +106,7 @@ const examSchema = new mongoose.Schema({
     reviews: [reviewSchema],
     userScores: {
         type: Map,
-        of: Number,
+        of: mongoose.Schema.Types.Mixed,
         default: {}
     }
 }, { timestamps: true });

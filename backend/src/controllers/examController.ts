@@ -8,6 +8,10 @@ const toTitleCase = (str: string) => {
 const formatExamResponse = (exam: any) => {
     const examObj = exam.toObject ? exam.toObject() : exam;
     
+    if (examObj.userScores && examObj.userScores instanceof Map) {
+        examObj.userScores = Object.fromEntries(examObj.userScores);
+    }
+
     if (examObj.author && typeof examObj.author === 'object') {
         const firstName = examObj.author.firstName || "";
         const lastName = examObj.author.lastName || "";
@@ -218,23 +222,55 @@ export const deleteExam = async (req, res) => {
 export const submitExamScore = async (req, res) => {
     try {
         const { id } = req.params;
-        const { score } = req.body;
+        const { score, partIndex } = req.body;
         const userId = req.user._id.toString();
 
         const exam = await Exam.findById(id);
         if (!exam) return res.status(404).json({ message: "Exam not found" });
 
         exam.submittedCount = (exam.submittedCount || 0) + 1;
-        const currentHighScore = exam.userScores.get(userId) || 0;
-        if (score > currentHighScore) {
-            exam.userScores.set(userId, score);
+        
+        let userData = exam.userScores.get(userId);
+        if (typeof userData === 'number') {
+            userData = { total: userData, parts: {} };
+        } else if (!userData) {
+            userData = { total: 0, parts: {} };
         }
+
+        if (partIndex !== undefined && partIndex !== -1) {
+            userData.parts = userData.parts || {};
+            
+            const currentPartScore = userData.parts[partIndex] || 0;
+            if (score > currentPartScore) {
+                userData.parts[partIndex] = score;
+            }
+
+            const totalParts = exam.parts.length;
+            if (totalParts > 0) {
+                let sum = 0;
+                for (let i = 0; i < totalParts; i++) {
+                    sum += (userData.parts[i] || 0);
+                }
+                const newTotal = Math.round(sum / totalParts);
+                userData.total = newTotal;
+            } else {
+                userData.total = score;
+            }
+
+        } else {
+            if (score > userData.total) {
+                userData.total = score;
+            }
+        }
+        
+        exam.userScores.set(userId, userData);
         exam.markModified('userScores'); 
         await exam.save();
+        
         res.status(200).json({ 
             message: "Score saved",
             id: exam._id,
-            highScore: Math.max(score, currentHighScore),
+            highScore: userData.total,
             submittedCount: exam.submittedCount,
         });
     } catch (error) {
@@ -252,7 +288,15 @@ export const addReview = async (req, res) => {
         const exam = await Exam.findById(id);
         if (!exam) return res.status(404).json({ message: "Exam not found" });
 
-        const userHighScore = exam.userScores.get(userId) || 0;
+        const userData = exam.userScores.get(userId);
+        let userHighScore = 0;
+        
+        if (typeof userData === 'number') {
+            userHighScore = userData;
+        } else if (userData && typeof userData === 'object') {
+            userHighScore = userData.total || 0;
+        }
+
         if (userHighScore < 80) {
             return res.status(403).json({ message: `
                 You need at least 80% score to review. 

@@ -56,7 +56,7 @@ export interface ExamType {
 
   parts: ExamPart[];
   reviews?: Review[];
-  userScores?: Record<string, number>;
+  userScores?: Record<string, number | { total: number; parts: Record<string, number> }>;
 }
 
 export interface Review {

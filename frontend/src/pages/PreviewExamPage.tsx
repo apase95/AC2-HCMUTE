@@ -41,16 +41,19 @@ export const PreviewExamPage = () => {
         setIsFilterOpen(false);
     };
 
-    let userScore = 0;
+    let userScore: number = 0;
     if (currentItem) {
-        if (currentItem.completionCount !== undefined) {
-            userScore = currentItem.completionCount;
-        } 
-        else if (user && currentItem.userScores && currentItem.userScores[user._id]) {
-            userScore = currentItem.userScores[user._id];
+        if (user && currentItem.userScores && currentItem.userScores[user._id]) {
+            const scoreData = currentItem.userScores[user._id];
+            if (typeof scoreData === 'number') {
+                userScore = scoreData;
+            } else if (typeof scoreData === 'object' && scoreData.total !== undefined) {
+                userScore = scoreData.total;
+            }
         }
     }
-
+    const completionCount = Math.max(currentItem?.completionCount || 0, userScore) || 0;
+    
     const handleSubmitReview = (rating: number, comment: string) => {
         if (currentItem) {
             dispatch(addExamReview({ id: currentItem._id, rating, comment }));
@@ -73,7 +76,7 @@ export const PreviewExamPage = () => {
                 onCloseFilter={handleCloseFilter}
                 onSelectFilter={handleSelectFilter}
                 userScore={userScore}
-                completionCount={currentItem.completionCount || 0}
+                completionCount={completionCount}
                 onSubmitReview={handleSubmitReview}
             />
         </>

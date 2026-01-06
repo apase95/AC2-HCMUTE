@@ -5,8 +5,6 @@ import { FaChevronDown, FaChevronUp, FaStar } from "react-icons/fa6";
 import { CiWarning } from "react-icons/ci";
 import { AiOutlineGlobal } from "react-icons/ai";
 import { ButtonBase } from "../components/sub/ButtonBase";
-import { MdFilterListAlt } from "react-icons/md";
-import { ButtonBrand } from "../components/sub/ButtonBrand";
 import { FaRegFileAlt } from "react-icons/fa";
 
 interface PreviewExamFormProps {
@@ -23,7 +21,7 @@ interface PreviewExamFormProps {
 }
 
 export const PreviewExamForm = (props: PreviewExamFormProps) => {
-    const filterRef: React.RefObject<HTMLDivElement> = useRef<HTMLDivElement>(null);
+    const filterRef: React.RefObject<HTMLDivElement> = useRef<HTMLDivElement>(null!);
     useClickOutside(filterRef, props.onCloseFilter);
 
     const [isPartsOpen, setIsPartsOpen] = useState(true);
@@ -49,9 +47,7 @@ export const PreviewExamForm = (props: PreviewExamFormProps) => {
 
     const [rating, setRating] = useState(0);
     const [comment, setComment] = useState("");
-    const canReview = props.userScore >= 0;
-
-    console.log("User Score:", props.userScore, "Completion:", props.completionCount);
+    const canReview = props.userScore >= 80;
 
     const handlePostReview = () => {
         if (rating === 0 || comment.trim() === "") return alert("Please rate and write a comment");
@@ -73,6 +69,8 @@ export const PreviewExamForm = (props: PreviewExamFormProps) => {
             label: `Language: ${props.exam.language || "English"}`,
         },
     ];
+
+    console.log(props.exam.reviews);
 
     return (
         <div className="relative min-h-screen h-auto w-full grid-pattern">
@@ -226,7 +224,7 @@ export const PreviewExamForm = (props: PreviewExamFormProps) => {
                                                     className="w-6 h-6 rounded-full"
                                                 />
                                                 <span className="font-bold text-sm text-white">
-                                                    {review.user?.displayName || "User"}
+                                                    {review._id || "User"}
                                                 </span>
                                             </div>
                                             <div className="flex text-yellow-400 text-xs">

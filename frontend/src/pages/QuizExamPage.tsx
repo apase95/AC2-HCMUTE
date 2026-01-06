@@ -33,11 +33,6 @@ export const QuizExamPage = () => {
         }
     }, [exam, partIndex]);
 
-    const allQuestions: Question[] = useMemo(() => {
-        if (!exam || !exam.parts) return [];
-        return exam.parts.flatMap(part => part.questions);
-    }, [exam]);
-
     const [bookmarkedQuestions, setBookmarkedQuestions] = useState<(number | string)[]>([]);
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
     const [userAnswers, setUserAnswers] = useState<Record<number | string, string[]>>({});
@@ -49,7 +44,7 @@ export const QuizExamPage = () => {
             if (forceSubmit || confirm("Are you sure you want to submit?")) {
                 setIsSubmitted(true);
 
-                const correctCount = allQuestions.reduce((acc, q) => {
+                const correctCount = questionsToDisplay.reduce((acc, q) => {
                     const userAnswer = userAnswers[q.id] || [];
                     const isCorrect = 
                         userAnswer.length === q.correctAnswers.length &&
@@ -57,10 +52,10 @@ export const QuizExamPage = () => {
                     return isCorrect ? acc + 1 : acc;
                 }, 0);
 
-                const scorePercent = Math.round((correctCount / allQuestions.length) * 100);
+                const scorePercent = Math.round((correctCount / questionsToDisplay.length) * 100);
 
                 if (id) {
-                    await dispatch(submitExamResult({ id, score: scorePercent }));
+                    await dispatch(submitExamResult({ id, score: scorePercent, partIndex }));
                 }
             }
         }

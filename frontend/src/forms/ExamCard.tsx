@@ -51,7 +51,7 @@ export const ExamCard = ({
             }
         }
         return stars;
-    }
+    };
 
     const handleStartExam = (e: React.MouseEvent<HTMLButtonElement>) => {
         if ((e.target as HTMLElement).closest('.more-btn')) return;

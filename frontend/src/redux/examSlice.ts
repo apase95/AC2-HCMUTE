@@ -51,9 +51,9 @@ export const addExamReview = createAsyncThunk(
 
 export const submitExamResult = createAsyncThunk(
     "exams/submitScore",
-    async ({ id, score } : { id: string; score: number }, { rejectWithValue }) => {
+    async ({ id, score, partIndex } : { id: string; score: number; partIndex?: number }, { rejectWithValue }) => {
         try {
-            const response = await api.post(`/exams/${id}/score`, { score });
+            const response = await api.post(`/exams/${id}/score`, { score, partIndex });
             return { id, score: response.data.highScore, submittedCount: response.data.submittedCount };
         } catch (error: any) {
             return rejectWithValue("Failed to save score");
