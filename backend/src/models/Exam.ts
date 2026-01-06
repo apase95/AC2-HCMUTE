@@ -82,7 +82,7 @@ const examSchema = new mongoose.Schema({
         type: Number, 
         default: 0 
     },
-    ratingCount: { 
+    ratingsCount: { 
         type: Number, 
         default: 0 
     },

@@ -16,7 +16,7 @@ export const SettingForm = ( props : SettingFormProps) => {
 
     return (
         <div className="relative min-h-screen h-auto w-full grid-pattern pt-24 ">
-            <div className="mx-auto w-[90%] lg:w-[50%] space-y-8 mb-12">
+            <div className="mx-auto w-[90%] lg:w-[50%] space-y-8 pb-12">
                 
                 <h1 className="text-3xl font-bold text-white mb-8 text-center">Account Settings</h1>
 

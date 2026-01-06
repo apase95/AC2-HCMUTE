@@ -30,7 +30,7 @@ export const PreviewExamForm = (props: PreviewExamFormProps) => {
     const RatingInfo = [
         {
             label: props.exam.rating?.toFixed(1) || "0.0",
-            value: `${props.exam.ratingsCount || 0} Ratings`,
+            value: `${props.exam?.ratingsCount || 0} Ratings`,
             icon: <FaStar className="text-yellow-400" size={18} />,
         },
         {
