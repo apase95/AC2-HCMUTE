@@ -70,7 +70,7 @@ export const PreviewExamForm = (props: PreviewExamFormProps) => {
         },
     ];
 
-    console.log(props.exam.reviews);
+    console.log(props.exam);
 
     return (
         <div className="relative min-h-screen h-auto w-full grid-pattern">
@@ -224,7 +224,7 @@ export const PreviewExamForm = (props: PreviewExamFormProps) => {
                                                     className="w-6 h-6 rounded-full"
                                                 />
                                                 <span className="font-bold text-sm text-white">
-                                                    {review._id || "User"}
+                                                    {review.user?.displayName || "User"}
                                                 </span>
                                             </div>
                                             <div className="flex text-yellow-400 text-xs">
