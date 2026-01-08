@@ -10,16 +10,16 @@ import { ReviewList } from "./ReviewList";
 
 interface PreviewExamFormProps {
     exam: ExamType;
-    onStartExam: () => void;
+    userScore: number;
     isFilterOpen: boolean;
+    currentUser: User | null;
+    onStartExam: () => void;
     onToggleFilter: () => void;
     onCloseFilter: () => void;
     onSelectFilter: (filter: string) => void;
     onStartPart: (partIndex: number) => void;
-    userScore: number;
     onSubmitReview: (rating: number, comment: string) => void;
     onDeleteReview: (reviewId: string) => void;
-    currentUser: User | null;
 }
 
 export const PreviewExamForm = (props: PreviewExamFormProps) => {

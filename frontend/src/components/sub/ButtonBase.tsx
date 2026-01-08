@@ -5,9 +5,9 @@ interface ButtonBaseProps {
     bgColor?: string;
     hoverBgColor?: string;
     subClassName?: string;
-    onClick?: () => void;
     type?: "button" | "submit" | "reset";
     disabled?: boolean;
+    onClick?: () => void;
 }
 
 export const ButtonBase = (props: ButtonBaseProps) => {

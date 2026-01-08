@@ -2,8 +2,8 @@ import { useState, useRef, useEffect } from "react";
 import { FaCloudUploadAlt, FaImage, FaTrash } from "react-icons/fa";
 
 interface thumbnailUploadProps {
-    onFileSelect: (file: File | null) => void;
     initialPreview?: string | null;
+    onFileSelect: (file: File | null) => void;
 }
 
 export const ThumbnailUpload = ({ onFileSelect, initialPreview }: thumbnailUploadProps) => {

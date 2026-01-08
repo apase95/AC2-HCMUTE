@@ -67,6 +67,17 @@ export interface Review {
     createdAt: string;
 }
 
+export interface CommentType {
+    _id: string;
+    content: string;
+    author: {
+        _id: string;
+        displayName: string;
+        avatarURL?: string;
+    };
+    createdAt: string;
+}
+
 export interface User {
     _id: string;
     displayName: string;

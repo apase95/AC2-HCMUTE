@@ -5,8 +5,8 @@ import { FaStar, FaTrash } from "react-icons/fa6";
 interface ReviewListProps {
     exam: ExamType;
     review: Review;
-    onDeleteReview: (reviewId: string) => void;
     currentUser: User | null;
+    onDeleteReview: (reviewId: string) => void;
 }
 
 export const ReviewItem = (props: ReviewListProps) => {

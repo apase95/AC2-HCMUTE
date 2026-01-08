@@ -3,11 +3,11 @@ import { BoxInputBase } from "../components/sub/BoxInputBase";
 import { ButtonBase } from "../components/sub/ButtonBase";
 
 interface SettingFormProps {
-    onChangePassword: (data: any) => void;
-    onChangePhone: (data: any) => void;
     loading: boolean;
     hasPhoneNumber: boolean;
     message: { text: string; type: 'success' | 'error' } | null;
+    onChangePhone: (data: any) => void;
+    onChangePassword: (data: any) => void;
 }
 
 export const SettingForm = ( props : SettingFormProps) => {

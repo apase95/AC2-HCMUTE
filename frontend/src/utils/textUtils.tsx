@@ -12,3 +12,4 @@ export const slugifyFormat = (text: string) => {
         .replace(/^-+/, '')
         .replace(/-+$/, '');
 };
+

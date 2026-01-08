@@ -6,15 +6,14 @@ import { ButtonBase } from "../components/sub/ButtonBase";
 interface UploadFormProps {
   isEditMode?: boolean;
   type: "document" | "blog";
-  onChangeType: (type: 'blog' | 'document') => void;
-
   title: string;
   tags: string;
   readTime: string;
   description: string;
   loading: boolean;
   thumbnailPreview?: string;
-    
+  
+  onChangeType: (type: 'blog' | 'document') => void;
   onChangeTitle: (val: string) => void;
   onChangeTags: (val: string) => void;
   onChangeReadTime: (val: string) => void;

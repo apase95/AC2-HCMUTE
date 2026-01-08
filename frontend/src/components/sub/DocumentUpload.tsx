@@ -2,8 +2,8 @@ import { useRef, useState } from "react";
 import { FaFilePdf, FaFileWord, FaFileAlt, FaFileCode, FaTrash, FaCloudUploadAlt } from "react-icons/fa";
 
 interface DocumentUploadProps {
-    onFileSelect?: (file: File | null) => void;
-    initialFile?: File | null;
+  initialFile?: File | null;
+  onFileSelect?: (file: File | null) => void;
 };
 
 export const DocumentUpload = ({ onFileSelect, initialFile }: DocumentUploadProps) => {

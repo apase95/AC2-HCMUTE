@@ -3,17 +3,7 @@ import { IoMdMore } from "react-icons/io";
 import { PopupMoreOption } from "./PopupMoreOption";
 import { useClickOutside } from "../hooks/useClickOutside";
 import { ButtonBase } from "../components/sub/ButtonBase";
-
-interface CommentType {
-    _id: string;
-    content: string;
-    author: {
-        _id: string;
-        displayName: string;
-        avatarURL?: string;
-    };
-    createdAt: string;
-}
+import type { CommentType } from "../Types";
 
 interface CommentItemProps {
     comment: CommentType;
