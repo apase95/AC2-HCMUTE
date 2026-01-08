@@ -27,7 +27,6 @@ export const PreviewExamForm = (props: PreviewExamFormProps) => {
     useClickOutside(filterRef, props.onCloseFilter);
     const [isPartsOpen, setIsPartsOpen] = useState(true);
     const totalQuestions = props.exam.parts?.reduce((acc, part) => acc + part.questions.length, 0) || 0;
-    
 
     const RatingInfo = [
         {
@@ -153,13 +152,13 @@ export const PreviewExamForm = (props: PreviewExamFormProps) => {
 
                     <div className="w-full mt-10 border-t border-white/40 pt-6">
                         <h2 className="text-xl font-semibold text-white mb-4">Comments & Reviews</h2>
-                            <ReviewList
-                                exam={props.exam}
-                                currentUser={props.currentUser}
-                                userScore={props.userScore}
-                                onSubmitReview={props.onSubmitReview}
-                                onDeleteReview={props.onDeleteReview}
-                            />
+                        <ReviewList
+                            exam={props.exam}
+                            currentUser={props.currentUser}
+                            userScore={props.userScore}
+                            onSubmitReview={props.onSubmitReview}
+                            onDeleteReview={props.onDeleteReview}
+                        />
                     </div>
                 </div>
             </div>

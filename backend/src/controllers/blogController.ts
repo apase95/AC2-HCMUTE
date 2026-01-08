@@ -2,30 +2,34 @@ import Blog from "../models/Blog.ts";
 
 const toTitleCase = (str: string) => {
     if (!str) return "";
-    return str.toLowerCase().split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+    return str
+        .toLowerCase()
+        .split(" ")
+        .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(" ");
 };
 
 const formatBlogResponse = (blog: any) => {
     const blogObj = blog.toObject ? blog.toObject() : blog;
-    
-    if (blogObj.author && typeof blogObj.author === 'object') {
+
+    if (blogObj.author && typeof blogObj.author === "object") {
         const firstName = blogObj.author.firstName || "";
         const lastName = blogObj.author.lastName || "";
         let rawName = `${firstName} ${lastName}`.trim();
-        
+
         if (!rawName) {
             rawName = blogObj.author.username || blogObj.author.email || "Unknown Author";
         }
 
         const displayName = toTitleCase(rawName);
-        
+
         return {
             ...blogObj,
             author: {
                 _id: blogObj.author._id,
                 displayName: displayName,
                 avatarURL: blogObj.author.avatarURL || "",
-            }
+            },
         };
     }
     return blogObj;
@@ -37,18 +41,18 @@ export const createBlog = async (req, res) => {
             return res.status(401).json({ message: "Unauthorized: User not identified" });
         }
 
-        const { title,  tags, readTime, subscription } = req.body;
+        const { title, tags, readTime, subscription } = req.body;
         const files = req.files as { [fieldname: string]: Express.Multer.File[] };
-        const thumbnailFile = files['thumbnail']?.[0];
-        const documentFile = files['document']?.[0];
-        
+        const thumbnailFile = files["thumbnail"]?.[0];
+        const documentFile = files["document"]?.[0];
+
         if (!title || !thumbnailFile || !documentFile) {
             return res.status(400).json({ message: "Title, thumbnail and content are required" });
         }
-        
+
         let processedTags = [];
-        if (tags && typeof tags === 'string') {
-            processedTags = tags.split(',').map((tag: string) => tag.trim());
+        if (tags && typeof tags === "string") {
+            processedTags = tags.split(",").map((tag: string) => tag.trim());
         }
 
         let newBlog = await Blog.create({
@@ -74,8 +78,8 @@ export const getAllBlogs = async (req, res) => {
         const blogs = await Blog.find()
             .populate("author", "firstName lastName avatarURL username email")
             .sort({ createdAt: -1 });
-        
-        const formattedBlogs = blogs.map(blog => formatBlogResponse(blog));
+
+        const formattedBlogs = blogs.map((blog) => formatBlogResponse(blog));
         res.status(200).json(formattedBlogs);
     } catch (error) {
         console.error("Error fetching blogs:", error);
@@ -87,8 +91,11 @@ export const getBlogById = async (req, res) => {
     try {
         const { id } = req.params;
 
-        const blog = await Blog.findById(id)
-            .populate("author", "firstName lastName avatarURL username email");
+        const blog = await Blog.findByIdAndUpdate(id, { $inc: { views: 1 } }, { new: true }).populate(
+            "author",
+            "firstName lastName avatarURL username email"
+        );
+
         if (!blog) {
             return res.status(404).json({ message: "Blog not found" });
         }
@@ -105,9 +112,9 @@ export const updateBlog = async (req, res) => {
         const { id } = req.params;
         const { title, content, coverImage, tags, readTime, subscription } = req.body;
         const files = req.files as { [fieldname: string]: Express.Multer.File[] } | undefined;
-        const thumbnailFile = files?.['thumbnail']?.[0];
-        const documentFile = files?.['document']?.[0];
-        
+        const thumbnailFile = files?.["thumbnail"]?.[0];
+        const documentFile = files?.["document"]?.[0];
+
         const blog = await Blog.findById(id);
         if (!blog) return res.status(404).json({ message: "Blog not found" });
         if (title) blog.title = title;
@@ -115,7 +122,7 @@ export const updateBlog = async (req, res) => {
         if (readTime) blog.readTime = readTime;
         if (tags) {
             if (typeof tags === "string") {
-                blog.tags = tags.split(',').map((tag: string) => tag.trim());
+                blog.tags = tags.split(",").map((tag: string) => tag.trim());
             } else {
                 blog.tags = tags;
             }
@@ -144,7 +151,7 @@ export const deleteBlog = async (req, res) => {
     try {
         const { id } = req.params;
         const userId = req.user._id;
-        
+
         const blog = await Blog.findById(id);
         if (!blog) {
             return res.status(404).json({ message: "Blog not found" });

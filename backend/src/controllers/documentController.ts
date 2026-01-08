@@ -2,17 +2,21 @@ import DocumentSchema from "../models/DocumentSchema.ts";
 
 const toTitleCase = (str: string) => {
     if (!str) return "";
-    return str.toLowerCase().split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+    return str
+        .toLowerCase()
+        .split(" ")
+        .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(" ");
 };
 
 const formatDocumentResponse = (doc: any) => {
     const docObj = doc.toObject ? doc.toObject() : doc;
 
-    if (docObj.author && typeof docObj.author === 'object') {
+    if (docObj.author && typeof docObj.author === "object") {
         const firstName = docObj.author.firstName || "";
         const lastName = docObj.author.lastName || "";
         let rawName = `${firstName} ${lastName}`.trim();
-        
+
         if (!rawName) {
             rawName = docObj.author.username || docObj.author.email || "Unknown Author";
         }
@@ -24,7 +28,7 @@ const formatDocumentResponse = (doc: any) => {
                 _id: docObj.author._id,
                 displayName: displayName,
                 avatarURL: docObj.author.avatarURL || "",
-            }
+            },
         };
     }
     return docObj;
@@ -32,14 +36,14 @@ const formatDocumentResponse = (doc: any) => {
 
 export const createDocument = async (req, res) => {
     try {
-        if (!req.user || !req.user._id) { 
-            return res.status(401).json({ message: "Unauthorized: User not identified" });    
+        if (!req.user || !req.user._id) {
+            return res.status(401).json({ message: "Unauthorized: User not identified" });
         }
 
         const { title, tags, readTime, subscription } = req.body;
         const files = req.files as { [fieldname: string]: Express.Multer.File[] };
-        const thumbnailFile = files['thumbnail']?.[0];
-        const documentFile = files['document']?.[0];
+        const thumbnailFile = files["thumbnail"]?.[0];
+        const documentFile = files["document"]?.[0];
 
         if (!thumbnailFile || !documentFile) {
             return res.status(400).json({ message: "Thumbnail and document files are required" });
@@ -49,8 +53,11 @@ export const createDocument = async (req, res) => {
         }
         let processedTags = [];
         if (tags) {
-            if (typeof tags === 'string') {
-                processedTags = tags.split(',').map((t: string) => t.trim()).filter((t: string) => t);
+            if (typeof tags === "string") {
+                processedTags = tags
+                    .split(",")
+                    .map((t: string) => t.trim())
+                    .filter((t: string) => t);
             } else if (Array.isArray(tags)) {
                 processedTags = tags;
             }
@@ -79,27 +86,28 @@ export const getAllDocuments = async (req, res) => {
         const documents = await DocumentSchema.find()
             .populate("author", "firstName lastName avatarURL username")
             .sort({ createdAt: -1 });
-        const formattedDocs = documents.map(doc => formatDocumentResponse(doc));
+        const formattedDocs = documents.map((doc) => formatDocumentResponse(doc));
         res.status(200).json(formattedDocs);
     } catch (error) {
         console.error("Error fetching documents:", error);
-        res.status(500).json({ message: "Internal server error" });      
+        res.status(500).json({ message: "Internal server error" });
     }
 };
-
 
 export const getDocumentById = async (req, res) => {
     try {
         const { id } = req.params;
-        const document = await DocumentSchema.findById(id)
-            .populate("author", "firstName lastName avatarURL username");
+        const document = await DocumentSchema.findByIdAndUpdate(id, { $inc: { views: 1 } }, { new: true }).populate(
+            "author",
+            "firstName lastName avatarURL username"
+        );
         if (!document) {
             return res.status(404).json({ message: "Document not found" });
         }
         res.status(200).json(formatDocumentResponse(document));
     } catch (error) {
         console.error("Error fetching document by ID:", error);
-        res.status(500).json({ message: "Internal server error" });      
+        res.status(500).json({ message: "Internal server error" });
     }
 };
 
@@ -108,9 +116,9 @@ export const updateDocument = async (req, res) => {
         const { id } = req.params;
         const { title, content, coverImage, tags, readTime, subscription } = req.body;
         const files = req.files as { [fieldname: string]: Express.Multer.File[] } | undefined;
-        const thumbnailFile = files?.['thumbnail']?.[0];
-        const documentFile = files?.['document']?.[0];
-        
+        const thumbnailFile = files?.["thumbnail"]?.[0];
+        const documentFile = files?.["document"]?.[0];
+
         const document = await DocumentSchema.findById(id);
         if (!document) return res.status(404).json({ message: "Document not found" });
         if (title) document.title = title;
@@ -118,7 +126,7 @@ export const updateDocument = async (req, res) => {
         if (readTime) document.readTime = readTime;
         if (tags) {
             if (typeof tags === "string") {
-                document.tags = tags.split(',').map((tag: string) => tag.trim());
+                document.tags = tags.split(",").map((tag: string) => tag.trim());
             } else {
                 document.tags = tags;
             }
@@ -159,6 +167,6 @@ export const deleteDocument = async (req, res) => {
         res.status(200).json({ message: "Document deleted successfully" });
     } catch (error) {
         console.error("Error deleting document:", error);
-        res.status(500).json({ message: "Internal server error" });      
+        res.status(500).json({ message: "Internal server error" });
     }
 };

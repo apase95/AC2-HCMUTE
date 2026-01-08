@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { FaCalendarAlt, FaClock, FaFileAlt } from "react-icons/fa";
+import { FaCalendarAlt, FaClock, FaEye, FaFileAlt } from "react-icons/fa";
 import { LoadingSpinner } from "../components/sub/LoadingSpinner";
 import { TagListComponent } from "../components/sub/TagListComponent";
 import { MarkdownRenderer } from "../components/handleFilePreview/markdown/MarkdownRenderer";
@@ -20,6 +20,7 @@ interface PostDetailFormProps {
     id?: string;
     authorId?: string;
     type?: "Blog" | "DocumentSchema";
+    views?: number;
 }
 
 const unescapeMarkdown = (text: string) => {
@@ -150,6 +151,9 @@ export const PostDetailForm = (props: PostDetailFormProps) => {
                             </div>
                             <div className="flex items-center gap-2">
                                 <FaClock /> <span>{props.readTime}</span>
+                            </div>
+                            <div className="flex items-center gap-2">
+                                <FaEye /> <span>{props.views} views</span>
                             </div>
                         </div>
                     </div>

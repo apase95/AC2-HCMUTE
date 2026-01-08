@@ -1,7 +1,6 @@
 import { PopupComponent } from "../components/sub/PopupComponent";
-import { FaEdit } from "react-icons/fa";
+import { FaEdit, FaTrash } from "react-icons/fa";
 import type { IconButtonType } from "../Types";
-import { FaDeleteLeft } from "react-icons/fa6";
 
 interface PopupMoreOptionProps {
     isOpen: boolean;
@@ -26,7 +25,7 @@ export const PopupMoreOption = (props: PopupMoreOptionProps) => {
 
     if (props.onDelete) {
         allLinks.push({
-            icon: <FaDeleteLeft size="22" />,
+            icon: <FaTrash size="22" />,
             title: "Delete",
             url: "#",
             onClick: (e: any) => {
@@ -48,8 +47,8 @@ export const PopupMoreOption = (props: PopupMoreOptionProps) => {
                 links={allLinks}
                 hasSearch={false}
                 bgColor="bg-white/20"
-                subClassName="w-full py-2 text-white flex-center flex-row space-x-3 rounded-sm 
-                    hover:bg-primary-dark/80 transition-all-300 cursor-pointer"
+                subClassName="w-full py-2 pl-10 text-white flex-start flex-row space-x-2 rounded-sm 
+                    font-bold hover:bg-primary-dark/80 transition-all-300 cursor-pointer"
             />
         </div>
     );

@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useLocation, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import type { AppDispatch, RootState } from "../redux/store";
@@ -19,10 +19,16 @@ export const PostDetailPage = () => {
 
     const { currentItem, loading, error } = isBlog ? blogState : docState;
 
+    const hasFetched = useRef(false);
+
     useEffect(() => {
         if (!id) return;
+        if (hasFetched.current) return;
+
+        hasFetched.current = true;
         if (isBlog) dispatch(fetchBlogById(id));
         else dispatch(fetchDocumentById(id));
+
         return () => {
             if (isBlog) dispatch(clearBlog());
             else dispatch(clearDoc());
@@ -50,6 +56,7 @@ export const PostDetailPage = () => {
                 id={currentItem._id}
                 authorId={currentItem.author?._id}
                 type={isBlog ? "Blog" : "DocumentSchema"}
+                views={currentItem.views || 0}
             />
         </>
     );
