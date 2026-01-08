@@ -1,4 +1,4 @@
-import { FaBookOpen, FaEye } from "react-icons/fa";
+import { FaBookOpen, FaChartLine } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { TagListComponent } from "../components/sub/TagListComponent";
 import { IoMdMore } from "react-icons/io";
@@ -120,10 +120,9 @@ export const CardBlog: React.FC<CardProps> = (props: CardProps) => {
                 </div>
                 <p className="text-white/60">{props.duration}</p>
                 <div className="text-white/60">•</div>
-                <div className="text-white/60">
-                    <FaEye size="16" />
-                </div>
-                <p className="text-white/60">{props.views} views</p>
+                <p className="text-white/60">
+                    {props.views > 1 ? `${props.views} views` : `${props.views} view`}
+                </p>
             </div>
         </div>
     );

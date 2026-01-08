@@ -18,9 +18,7 @@ const initialState: BlogState = {
     uploadSuccess: false,
 };
 
-export const fetchBlogs = createAsyncThunk(
-    "blogs/fetchBlogs", 
-    async (_, { rejectWithValue }) => {
+export const fetchBlogs = createAsyncThunk("blogs/fetchBlogs", async (_, { rejectWithValue }) => {
     try {
         const response = await api.get("/blogs");
         return response.data;
@@ -29,43 +27,34 @@ export const fetchBlogs = createAsyncThunk(
     }
 });
 
-export const createBlog = createAsyncThunk(
-    "blogs/createBlog",
-    async (formData: FormData, { rejectWithValue }) => {
-        try {
-            const response = await api.post('/blogs', formData, { 
-                headers: { 'Content-Type': 'multipart/form-data' } 
-            });
-            return response.data;
-        } catch (error: any) {
-            return rejectWithValue(error.response?.data?.message || "CREATED BLOG FAILED");
-        }
+export const createBlog = createAsyncThunk("blogs/createBlog", async (formData: FormData, { rejectWithValue }) => {
+    try {
+        const response = await api.post("/blogs", formData, {
+            headers: { "Content-Type": "multipart/form-data" },
+        });
+        return response.data;
+    } catch (error: any) {
+        return rejectWithValue(error.response?.data?.message || "CREATED BLOG FAILED");
     }
-);
+});
 
-export const fetchBlogById = createAsyncThunk(
-    "blogs/fetchById",
-    async (id: string, { rejectWithValue }) => {
-        try {
-            const response = await api.get(`/blogs/${id}`);
-            return response.data;
-        } catch (error: any) {
-            return rejectWithValue(error.response?.data?.message || "FAILED TO FETCH BLOG BY ID");
-        }
+export const fetchBlogById = createAsyncThunk("blogs/fetchById", async (id: string, { rejectWithValue }) => {
+    try {
+        const response = await api.get(`/blogs/${id}`);
+        return response.data;
+    } catch (error: any) {
+        return rejectWithValue(error.response?.data?.message || "FAILED TO FETCH BLOG BY ID");
     }
-);
+});
 
-export const deleteBlog = createAsyncThunk(
-    "blogs/deleteBlog",
-    async (id: string, { rejectWithValue }) => {
-        try {
-            await api.delete(`/blogs/${id}`);
-            return id;
-        } catch (error: any) {
-            return rejectWithValue(error.response?.data?.message || "DELETE BLOG FAILED");
-        }
+export const deleteBlog = createAsyncThunk("blogs/deleteBlog", async (id: string, { rejectWithValue }) => {
+    try {
+        await api.delete(`/blogs/${id}`);
+        return id;
+    } catch (error: any) {
+        return rejectWithValue(error.response?.data?.message || "DELETE BLOG FAILED");
     }
-);
+});
 
 const blogSlice = createSlice({
     name: "blogs",
@@ -79,18 +68,18 @@ const blogSlice = createSlice({
         clearCurrentItem: (state) => {
             state.currentItem = null;
             state.error = null;
-        }
+        },
     },
     extraReducers: (builder) => {
         // Fetch All
         builder.addCase(fetchBlogs.pending, (state) => {
             state.loading = true;
             state.error = null;
-        })
+        });
         builder.addCase(fetchBlogs.fulfilled, (state, action) => {
             state.loading = false;
             state.items = action.payload;
-        })
+        });
         builder.addCase(fetchBlogs.rejected, (state, action) => {
             state.loading = false;
             state.error = action.payload as string;
@@ -105,12 +94,17 @@ const blogSlice = createSlice({
         builder.addCase(fetchBlogById.fulfilled, (state, action) => {
             state.loading = false;
             state.currentItem = action.payload;
+
+            const index = state.items.findIndex((item) => item._id === action.payload._id);
+            if (index !== -1) {
+                state.items[index] = action.payload;
+            }
         });
         builder.addCase(fetchBlogById.rejected, (state, action) => {
             state.loading = false;
             state.error = action.payload as string;
         });
-        
+
         // Create
         builder.addCase(createBlog.pending, (state) => {
             state.loading = true;
@@ -130,10 +124,10 @@ const blogSlice = createSlice({
 
         // Delete
         builder.addCase(deleteBlog.fulfilled, (state, action) => {
-            state.items = state.items.filter(blog => blog._id !== action.payload);
+            state.items = state.items.filter((blog) => blog._id !== action.payload);
         });
     },
 });
 
-export const { resetUploadState, clearCurrentItem } = blogSlice.actions; 
+export const { resetUploadState, clearCurrentItem } = blogSlice.actions;
 export default blogSlice.reducer;

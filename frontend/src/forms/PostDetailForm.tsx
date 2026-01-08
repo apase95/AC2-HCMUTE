@@ -153,7 +153,7 @@ export const PostDetailForm = (props: PostDetailFormProps) => {
                                 <FaClock /> <span>{props.readTime}</span>
                             </div>
                             <div className="flex items-center gap-2">
-                                <FaEye /> <span>{props.views} views</span>
+                                <FaEye size={16} /> <span>{props.views} views</span>
                             </div>
                         </div>
                     </div>
