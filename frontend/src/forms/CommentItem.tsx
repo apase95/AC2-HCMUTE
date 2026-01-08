@@ -146,14 +146,14 @@ export const CommentItem = ({ comment, currentUserId, postAuthorId, onDelete, on
                         {isLongContent && (
                             <button 
                                 onClick={() => setIsExpanded(!isExpanded)}
-                                className="text-xs text-gray-300/80 hover:text-gray-500/80 font-semibold 
+                                className="text-xs text-gray-200 hover:text-gray-500/80 font-semibold 
                                     underline focus:outline-none"
                             >
                                 {isExpanded ? "Show less" : "show more"}
                             </button>
                         )}
                     </div>
-                    )}
+                )}
             </div>
         </div>
     );

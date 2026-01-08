@@ -1,11 +1,12 @@
 import { useRef, useState } from "react";
 import type { ExamType, User } from "../Types";
 import { useClickOutside } from "../hooks/useClickOutside";
-import { FaChevronDown, FaChevronUp, FaStar, FaTrash } from "react-icons/fa6";
+import { FaChevronDown, FaChevronUp, FaStar } from "react-icons/fa6";
 import { CiWarning } from "react-icons/ci";
 import { AiOutlineGlobal } from "react-icons/ai";
 import { ButtonBase } from "../components/sub/ButtonBase";
 import { FaRegFileAlt } from "react-icons/fa";
+import { ReviewList } from "./ReviewList";
 
 interface PreviewExamFormProps {
     exam: ExamType;
@@ -24,9 +25,9 @@ interface PreviewExamFormProps {
 export const PreviewExamForm = (props: PreviewExamFormProps) => {
     const filterRef: React.RefObject<HTMLDivElement> = useRef<HTMLDivElement>(null!);
     useClickOutside(filterRef, props.onCloseFilter);
-
     const [isPartsOpen, setIsPartsOpen] = useState(true);
     const totalQuestions = props.exam.parts?.reduce((acc, part) => acc + part.questions.length, 0) || 0;
+    
 
     const RatingInfo = [
         {
@@ -45,18 +46,6 @@ export const PreviewExamForm = (props: PreviewExamFormProps) => {
             icon: null,
         },
     ];
-
-    const [rating, setRating] = useState(0);
-    const [comment, setComment] = useState("");
-    const [visibleReviews, setVisibleReviews] = useState(3);
-    const canReview = props.userScore >= 80;
-
-    const handlePostReview = () => {
-        if (rating === 0 || comment.trim() === "") return alert("Please rate and write a comment");
-        props.onSubmitReview(rating, comment);
-        setRating(0);
-        setComment("");
-    };
 
     const ExamInfo = [
         {
@@ -164,124 +153,13 @@ export const PreviewExamForm = (props: PreviewExamFormProps) => {
 
                     <div className="w-full mt-10 border-t border-white/40 pt-6">
                         <h2 className="text-xl font-semibold text-white mb-4">Comments & Reviews</h2>
-
-                        {/* Input Form */}
-                        <div className="bg-white/5 p-4 rounded-lg mb-6 border border-white/40">
-                            {!canReview ? (
-                                <p className="text-red-600 text-sm italic mb-2">
-                                    *You need to achieve at least 80% score to write a review. (Your best:{" "}
-                                    {props.userScore}%)
-                                </p>
-                            ) : (
-                                <div className="flex items-center gap-2 mb-3">
-                                    <span className="text-gray-300 text-sm font-semibold">Your Rating:</span>
-                                    {[1, 2, 3, 4, 5].map((star) => (
-                                        <button key={star} onClick={() => setRating(star)}>
-                                            <FaStar
-                                                className={star <= rating ? "text-yellow-400" : "text-gray-600"}
-                                                size={18}
-                                            />
-                                        </button>
-                                    ))}
-                                </div>
-                            )}
-
-                            <div className="flex gap-2">
-                                <input
-                                    disabled={!canReview}
-                                    value={comment}
-                                    onChange={(e) => setComment(e.target.value)}
-                                    className={`flex-1 bg-transparent text-white border border-white/40
-                                        rounded-lg px-4 py-2 shadow-inner focus:outline-none focus:border-white/80
-                                        placeholder:text-gray-500 transition-all-300 ${
-                                            !canReview ? "opacity-50 cursor-not-allowed" : ""
-                                        }`}
-                                    placeholder={canReview ? "Write a review..." : "Complete exam to review"}
-                                />
-
-                                <ButtonBase
-                                    name="Post"
-                                    width="w-24"
-                                    textColor="text-white"
-                                    bgColor={canReview ? "bg-secondary/80" : "bg-gray-700"}
-                                    hoverBgColor={canReview ? "hover:bg-secondary/40" : ""}
-                                    subClassName={`font-semibold rounded-lg ${!canReview ? "cursor-not-allowed" : ""}`}
-                                    onClick={handlePostReview}
-                                    disabled={!canReview}
-                                />
-                            </div>
-                        </div>
-
-                        {/* List Reviews */}
-                        <div className="space-y-4">
-                            {props.exam.reviews && props.exam.reviews.length > 0 ? (
-                                <>
-                                    {props.exam.reviews.slice(0, visibleReviews).map((review) => (
-                                        <div
-                                            key={review._id}
-                                            className="bg-white/5 p-4 rounded-lg border border-white/40"
-                                        >
-                                            <div className="flex justify-between items-start mb-2">
-                                                <div className="flex items-center gap-2">
-                                                    <img
-                                                        src={review.user?.avatarURL || "/logo.jpg"}
-                                                        className="w-6 h-6 rounded-full"
-                                                    />
-                                                    <span className="font-bold text-sm text-white">
-                                                        {review.user?.displayName || "User"}
-                                                    </span>
-                                                </div>
-                                                <div className="flex items-center gap-4">
-                                                    <div className="flex text-yellow-400 text-xs">
-                                                        {[...Array(5)].map((_, i) => (
-                                                            <FaStar
-                                                                key={i}
-                                                                className={
-                                                                    i < review.rating
-                                                                        ? "text-yellow-400"
-                                                                        : "text-gray-700"
-                                                                }
-                                                            />
-                                                        ))}
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <p className="text-white text-sm">{review.comment}</p>
-                                            <div className="w-full flex items-center justify-between">
-                                                <span className="text-xs text-gray-400 mt-2 block">
-                                                    {new Date(review.createdAt).toLocaleDateString()}
-                                                </span>
-                                                {(props.currentUser?._id === review.user?._id ||
-                                                        props.currentUser?.role === "admin" ||
-                                                        props.currentUser?._id === props.exam.author?._id) && (
-                                                        <button
-                                                            onClick={() => props.onDeleteReview(review._id)}
-                                                            className="text-white/40 hover:text-red-300 transition-colors"
-                                                            title="Delete Review"
-                                                        >
-                                                            <FaTrash size={12} />
-                                                        </button>
-                                                    )}
-                                            </div>
-                                        </div>
-                                    ))}
-
-                                    {visibleReviews < props.exam.reviews.length && (
-                                        <div className="w-full flex justify-center mt-4">
-                                            <ButtonBase
-                                                name="Show More"
-                                                onClick={() => setVisibleReviews((prev) => prev + 3)}
-                                                bgColor="transparent"
-                                                hoverBgColor="hover:underline"
-                                                textColor="text-white/80"
-                                            />
-                                        </div>
-                                    )}
-                                </>
-                            ) : (
-                                <p className="text-gray-400 text-sm text-center">No reviews yet.</p>
-                            )}
-                        </div>
+                            <ReviewList
+                                exam={props.exam}
+                                currentUser={props.currentUser}
+                                userScore={props.userScore}
+                                onSubmitReview={props.onSubmitReview}
+                                onDeleteReview={props.onDeleteReview}
+                            />
                     </div>
                 </div>
             </div>
