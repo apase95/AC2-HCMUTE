@@ -4,6 +4,11 @@ import type { DocumentType } from "../Types";
 
 interface DocumentState {
     items: DocumentType[];
+    pagination?: {
+        currentPage: number;
+        totalPages: number;
+        totalItems: number;
+    };
     currentItem?: DocumentType | null;
     loading: boolean;
     error: string | null;
@@ -17,14 +22,17 @@ const initialState: DocumentState = {
     uploadSuccess: false,
 };
 
-export const fetchDocuments = createAsyncThunk("documents/fetchDocuments", async (_, { rejectWithValue }) => {
-    try {
-        const response = await api.get("/documents");
-        return response.data;
-    } catch (error: any) {
-        return rejectWithValue(error.response?.data?.message || "FAILED TO FETCH DOCUMENTS");
+export const fetchDocuments = createAsyncThunk(
+    "documents/fetchDocuments",
+    async ({ page, limit }: { page: number; limit?: number } = { page: 1 }, { rejectWithValue }) => {
+        try {
+            const response = await api.get(`/documents?page=${page}&limit=${limit || 6}`);
+            return response.data;
+        } catch (error: any) {
+            return rejectWithValue(error.response?.data?.message || "FAILED TO FETCH DOCUMENTS");
+        }
     }
-});
+);
 
 export const createDocument = createAsyncThunk(
     "documents/createDocument",
@@ -82,7 +90,8 @@ const documentSlice = createSlice({
             })
             .addCase(fetchDocuments.fulfilled, (state, action) => {
                 state.loading = false;
-                state.items = action.payload;
+                state.items = action.payload.data;
+                state.pagination = action.payload.pagination;
             })
             .addCase(fetchDocuments.rejected, (state, action) => {
                 state.loading = false;

@@ -7,26 +7,25 @@ import { fetchExams } from "../redux/examSlice";
 import { LoadingSpinner } from "../components/sub/LoadingSpinner";
 import { ErrorComponent } from "../components/sub/ErrorComponent";
 import { LayoutParticles } from "../components/sub/LayoutParticles";
+import { PaginationControl } from "../components/sub/PaginationControl";
 
 export const ExamPage = () => {
-
     const dispatch = useDispatch<AppDispatch>();
-    const { items: allExams, loading, error } = useSelector((state: RootState) => state.exams);
+    const { items: allExams, loading, error, pagination } = useSelector((state: RootState) => state.exams);
 
     const [activeTag, setActiveTag] = useState<string>("All");
     const [activeSort, setActiveSort] = useState<string>("Popular");
+    const [page, setPage] = useState<number>(1);
 
     useEffect(() => {
-        if (allExams.length === 0 && !loading) {
-            dispatch(fetchExams());
-        }
-    }, [dispatch, allExams.length, loading]);
+        dispatch(fetchExams({ page, limit: 12 }));
+    }, [dispatch, page]);
 
     const filteredExams = useMemo(() => {
         let result = [...allExams];
 
         if (activeTag !== "All") {
-            result = result.filter(exam => exam.tags && exam.tags.includes(activeTag));
+            result = result.filter((exam) => exam.tags && exam.tags.includes(activeTag));
         }
 
         switch (activeSort) {
@@ -48,8 +47,8 @@ export const ExamPage = () => {
             <LayoutParticles />
             <div className="relative min-h-screen h-auto w-full grid-pattern">
                 <div className="mx-auto py-12 lg:w-[80%] md:w-[90%] sm:w-[80%] w-[90%]">
-                    <CategoryFilterComponent 
-                        tags={["CP", "SA", "DOE", "SO", "AN"]} 
+                    <CategoryFilterComponent
+                        tags={["CP", "SA", "DOE", "SO", "AN"]}
                         selectedTag={activeTag}
                         selectedSort={activeSort}
                         onSelectTag={(tag) => setActiveTag(tag)}
@@ -72,11 +71,19 @@ export const ExamPage = () => {
                                 />
                             ))
                         ) : (
-                            <div className="col-span-full text-center text-white/60">
-                                No exams found.
-                            </div>
+                            <div className="col-span-full text-center text-white/60">No exams found.</div>
                         )}
                     </div>
+
+                    {pagination && (
+                        <div className="mt-8 mb-12">
+                            <PaginationControl
+                                currentPage={pagination.currentPage}
+                                totalPages={pagination.totalPages}
+                                onPageChange={setPage}
+                            />
+                        </div>
+                    )}
                 </div>
             </div>
         </>

@@ -122,13 +122,30 @@ export const createExamFromJson = async (req, res) => {
 
 export const getAllExams = async (req, res) => {
     try {
+        const page = parseInt(req.query.page as string) || 1;
+        const limit = parseInt(req.query.limit as string) || 12;
+        const skip = (page - 1) * limit;
+
+        const totalItems = await Exam.countDocuments();
+        const totalPages = Math.ceil(totalItems / limit);
+
         const exams = await Exam.find()
             .populate("author", "firstName lastName avatarURL username email")
             .populate("reviews.user", "firstName lastName avatarURL username email")
-            .sort({ createdAt: -1 });
+            .sort({ createdAt: -1 })
+            .skip(skip)
+            .limit(limit);
 
         const formattedExams = exams.map((exam) => formatExamResponse(exam));
-        res.status(200).json(formattedExams);
+
+        res.status(200).json({
+            data: formattedExams,
+            pagination: {
+                currentPage: page,
+                totalPages,
+                totalItems,
+            },
+        });
     } catch (error) {
         console.error("Error fetching exams:", error);
         res.status(500).json({ message: "Internal server error" });

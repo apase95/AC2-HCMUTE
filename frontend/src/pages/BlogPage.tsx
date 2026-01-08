@@ -8,25 +8,25 @@ import { fetchBlogs } from "../redux/blogSlice";
 import { ErrorComponent } from "../components/sub/ErrorComponent";
 import { LoadingSpinner } from "../components/sub/LoadingSpinner";
 import { LayoutParticles } from "../components/sub/LayoutParticles";
+import { PaginationControl } from "../components/sub/PaginationControl";
 
 export const BlogPage = () => {
     const dispatch = useDispatch<AppDispatch>();
-    const { items: allBlogs, loading, error } = useSelector((state: RootState) => state.blogs);
+    const { items: allBlogs, loading, error, pagination } = useSelector((state: RootState) => state.blogs);
 
     const [activeTag, setActiveTag] = useState<string>("All");
     const [activeSort, setActiveSort] = useState<string>("Popular");
+    const [page, setPage] = useState<number>(1);
 
     useEffect(() => {
-        if (allBlogs.length === 0) {
-            dispatch(fetchBlogs());
-        }
-    }, [dispatch, allBlogs.length]);
+        dispatch(fetchBlogs({ page, limit: 9 }));
+    }, [dispatch, page]);
 
     const filteredBlogs = useMemo(() => {
         let result = [...allBlogs];
 
         if (activeTag !== "All") {
-            result = result.filter(blog => blog.tags && blog.tags.includes(activeTag));
+            result = result.filter((blog) => blog.tags && blog.tags.includes(activeTag));
         }
 
         switch (activeSort) {
@@ -55,23 +55,28 @@ export const BlogPage = () => {
             <LayoutParticles />
             <div className="relative min-h-screen h-auto w-full grid-pattern">
                 <div className="mx-auto pt-14 pb-20 w-[90%] md:w-[80%]">
-                    {!loading && latestBlogs.length > 0 && (
-                        <FeatureBanner blogs={latestBlogs} />
-                    )}
+                    {!loading && latestBlogs.length > 0 && <FeatureBanner blogs={latestBlogs} />}
                     {loading ? (
                         <LoadingSpinner />
                     ) : error ? (
                         <ErrorComponent error={error} inBlock={true} />
                     ) : (
                         <>
-                            <CategoryFilterComponent 
-                                tags={["Frontend", "Backend", "Design", "AWS"]} 
+                            <CategoryFilterComponent
+                                tags={["Frontend", "Backend", "Design", "AWS"]}
                                 selectedTag={activeTag}
                                 selectedSort={activeSort}
                                 onSelectTag={setActiveTag}
                                 onSelectSort={setActiveSort}
                             />
                             <BlogsListComponent blogs={filteredBlogs} />
+                            {pagination && (
+                                <PaginationControl
+                                    currentPage={pagination.currentPage}
+                                    totalPages={pagination.totalPages}
+                                    onPageChange={setPage}
+                                />
+                            )}
                         </>
                     )}
                 </div>

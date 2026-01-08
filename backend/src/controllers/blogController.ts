@@ -75,12 +75,29 @@ export const createBlog = async (req, res) => {
 
 export const getAllBlogs = async (req, res) => {
     try {
+        const page = parseInt(req.query.page as string) || 1;
+        const limit = parseInt(req.query.limit as string) || 9;
+        const skip = (page - 1) * limit;
+
+        const totalItems = await Blog.countDocuments();
+        const totalPages = Math.ceil(totalItems / limit);
+
         const blogs = await Blog.find()
             .populate("author", "firstName lastName avatarURL username email")
-            .sort({ createdAt: -1 });
+            .sort({ createdAt: -1 })
+            .skip(skip)
+            .limit(limit);
 
         const formattedBlogs = blogs.map((blog) => formatBlogResponse(blog));
-        res.status(200).json(formattedBlogs);
+
+        res.status(200).json({
+            data: formattedBlogs,
+            pagination: {
+                currentPage: page,
+                totalPages,
+                totalItems,
+            },
+        });
     } catch (error) {
         console.error("Error fetching blogs:", error);
         res.status(500).json({ message: "Internal server error" });

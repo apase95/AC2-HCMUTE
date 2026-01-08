@@ -83,11 +83,29 @@ export const createDocument = async (req, res) => {
 
 export const getAllDocuments = async (req, res) => {
     try {
+        const page = parseInt(req.query.page as string) || 1;
+        const limit = parseInt(req.query.limit as string) || 6;
+        const skip = (page - 1) * limit;
+
+        const totalItems = await DocumentSchema.countDocuments();
+        const totalPages = Math.ceil(totalItems / limit);
+
         const documents = await DocumentSchema.find()
             .populate("author", "firstName lastName avatarURL username")
-            .sort({ createdAt: -1 });
+            .sort({ createdAt: -1 })
+            .skip(skip)
+            .limit(limit);
+
         const formattedDocs = documents.map((doc) => formatDocumentResponse(doc));
-        res.status(200).json(formattedDocs);
+
+        res.status(200).json({
+            data: formattedDocs,
+            pagination: {
+                currentPage: page,
+                totalPages,
+                totalItems,
+            },
+        });
     } catch (error) {
         console.error("Error fetching documents:", error);
         res.status(500).json({ message: "Internal server error" });

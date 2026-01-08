@@ -4,6 +4,11 @@ import type { ExamType } from "../Types";
 
 interface ExamState {
     items: ExamType[];
+    pagination?: {
+        currentPage: number;
+        totalPages: number;
+        totalItems: number;
+    };
     loading: boolean;
     error: string | null;
     currentItem?: ExamType | null;
@@ -16,14 +21,17 @@ const initialState: ExamState = {
     currentItem: null,
 };
 
-export const fetchExams = createAsyncThunk("exams/fetchExams", async (_, { rejectWithValue }) => {
-    try {
-        const response = await api.get("/exams");
-        return response.data;
-    } catch (error: any) {
-        return rejectWithValue(error.response?.data?.message || "Failed to fetch exams");
+export const fetchExams = createAsyncThunk(
+    "exams/fetchExams",
+    async ({ page, limit }: { page: number; limit?: number } = { page: 1 }, { rejectWithValue }) => {
+        try {
+            const response = await api.get(`/exams?page=${page}&limit=${limit || 12}`);
+            return response.data;
+        } catch (error: any) {
+            return rejectWithValue(error.response?.data?.message || "Failed to fetch exams");
+        }
     }
-});
+);
 
 export const fetchExamById = createAsyncThunk("exams/fetchExamById", async (id: string, { rejectWithValue }) => {
     try {
@@ -91,7 +99,8 @@ const examSlice = createSlice({
             })
             .addCase(fetchExams.fulfilled, (state, action) => {
                 state.loading = false;
-                state.items = action.payload;
+                state.items = action.payload.data;
+                state.pagination = action.payload.pagination;
             })
             .addCase(fetchExams.rejected, (state, action) => {
                 state.loading = false;

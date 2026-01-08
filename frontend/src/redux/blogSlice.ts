@@ -4,6 +4,11 @@ import type { BlogType } from "../Types";
 
 interface BlogState {
     items: BlogType[];
+    pagination?: {
+        currentPage: number;
+        totalPages: number;
+        totalItems: number;
+    };
     currentItem?: BlogType | null;
     loading: boolean;
     error: string | null;
@@ -18,14 +23,17 @@ const initialState: BlogState = {
     uploadSuccess: false,
 };
 
-export const fetchBlogs = createAsyncThunk("blogs/fetchBlogs", async (_, { rejectWithValue }) => {
-    try {
-        const response = await api.get("/blogs");
-        return response.data;
-    } catch (error: any) {
-        return rejectWithValue(error.response?.data?.message || "FAILED TO FETCH BLOGS");
+export const fetchBlogs = createAsyncThunk(
+    "blogs/fetchBlogs",
+    async ({ page, limit }: { page: number; limit?: number } = { page: 1 }, { rejectWithValue }) => {
+        try {
+            const response = await api.get(`/blogs?page=${page}&limit=${limit || 9}`);
+            return response.data;
+        } catch (error: any) {
+            return rejectWithValue(error.response?.data?.message || "FAILED TO FETCH BLOGS");
+        }
     }
-});
+);
 
 export const createBlog = createAsyncThunk("blogs/createBlog", async (formData: FormData, { rejectWithValue }) => {
     try {
@@ -78,7 +86,8 @@ const blogSlice = createSlice({
         });
         builder.addCase(fetchBlogs.fulfilled, (state, action) => {
             state.loading = false;
-            state.items = action.payload;
+            state.items = action.payload.data;
+            state.pagination = action.payload.pagination;
         });
         builder.addCase(fetchBlogs.rejected, (state, action) => {
             state.loading = false;

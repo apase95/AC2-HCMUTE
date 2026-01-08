@@ -141,3 +141,14 @@ export interface CommentType {
     relatedId?: string;
     onModel?: string;
 }
+
+export interface PaginationMetadata {
+    currentPage: number;
+    totalPages: number;
+    totalItems: number;
+}
+
+export interface PaginatedResponse<T> {
+    data: T[];
+    pagination: PaginationMetadata;
+}
