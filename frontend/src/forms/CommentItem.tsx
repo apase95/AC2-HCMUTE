@@ -27,7 +27,9 @@ export const CommentItem = ({ comment, currentUserId, postAuthorId, onDelete, on
     const [isEditing, setIsEditing] = useState(false);
     const [editContent, setEditContent] = useState(comment.content);
     const [isOpen, setIsOpen] = useState(false);
+    const [isExpanded, setIsExpanded] = useState(false);
     const menuRef = useRef<HTMLDivElement>(null);
+    
 
     useClickOutside(menuRef, () => setIsOpen(false));
 
@@ -35,6 +37,9 @@ export const CommentItem = ({ comment, currentUserId, postAuthorId, onDelete, on
     const isPostOwner = currentUserId === postAuthorId;
     const canDelete = isOwner || isPostOwner;
     const canEdit = isOwner;
+
+    const lineCount = comment.content.split(/\r\n|\r|\n/).length;
+    const isLongContent = comment.content.length >= 200 || lineCount >= 3; 
 
     const handleEditSave = () => {
         if (editContent.trim() !== "") {
@@ -132,10 +137,23 @@ export const CommentItem = ({ comment, currentUserId, postAuthorId, onDelete, on
                         </div>
                     </div>
                 ) : (
-                    <p className="text-white/80 text-sm leading-relaxed whitespace-pre-wrap">
-                        {comment.content}
-                    </p>
-                )}
+                    <div className="w-full pr-8">
+                        <p className={`text-white/80 text-sm leading-relaxed whitespace-pre-wrap transition-all duration-300
+                            ${!isExpanded ? 'line-clamp-2' : ''}`}
+                        >
+                            {comment.content}
+                        </p>
+                        {isLongContent && (
+                            <button 
+                                onClick={() => setIsExpanded(!isExpanded)}
+                                className="text-xs text-gray-300/80 hover:text-gray-500/80 font-semibold 
+                                    underline focus:outline-none"
+                            >
+                                {isExpanded ? "Show less" : "show more"}
+                            </button>
+                        )}
+                    </div>
+                    )}
             </div>
         </div>
     );

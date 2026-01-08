@@ -90,7 +90,7 @@ export const CommentList = ({ postId, postAuthorId, onModel }: CommentListProps)
                             value={newComment}
                             onChange={(e) => setNewComment(e.target.value)}
                             placeholder="Write a comment..."
-                            className="w-full bg-white/5 border border-white/40 rounded-lg p-3 
+                            className="custom-scrollbar w-full bg-white/5 border border-white/40 rounded-lg p-3 
                                 text-white focus:border-white/80 focus:outline-none min-h-[100px]"
                         />
                         <ButtonBase
