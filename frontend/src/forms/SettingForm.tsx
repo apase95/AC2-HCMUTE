@@ -51,7 +51,7 @@ export const SettingForm = ( props : SettingFormProps) => {
                         />
                         <div className="flex justify-end pt-4">
                             <ButtonBase 
-                                name="Update Phone" bgColor="bg-purple-600" hoverBgColor="hover:bg-purple-800" textColor="text-white" width="w-32"
+                                name="Update Phone" bgColor="bg-secondary/80" hoverBgColor="hover:bg-secondary/40" textColor="text-white" width="w-32"
                                 onClick={() => props.onChangePhone(phoneData)} disabled={props.loading}
                             />
                         </div>
@@ -77,7 +77,7 @@ export const SettingForm = ( props : SettingFormProps) => {
                         />
                         <div className="flex justify-end pt-4">
                             <ButtonBase 
-                                name="Update Password" bgColor="bg-purple-600" hoverBgColor="hover:bg-purple-800" textColor="text-white" width="w-40"
+                                name="Update Password" bgColor="bg-secondary/80" hoverBgColor="hover:bg-secondary/40" textColor="text-white" width="w-40"
                                 onClick={() => props.onChangePassword(passData)} disabled={props.loading}
                             />
                         </div>

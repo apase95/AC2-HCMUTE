@@ -99,15 +99,15 @@ export const ProfileForm = ( props : ProfileFormProps) => {
                             />
                         </div>
 
-                        <div className="pt-4">
+                        <div className="w-full flex justify-end pt-4">
                             <ButtonBase
                                 type="submit" 
                                 onClick={props.onSave}
                                 width="w-28"
                                 name={props.loading ? "Saving..." : "Save"}
                                 textColor="text-white"
-                                bgColor="bg-secondary"
-                                subClassName="hover:bg-accent/20"
+                                bgColor="bg-secondary/80"
+                                subClassName="hover:bg-secondary/40"
                                 disabled={props.loading}
                             />
                         </div>

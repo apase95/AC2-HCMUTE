@@ -1,7 +1,7 @@
-import { FaFileUpload, FaCopy, FaCheck, FaImage, FaFileCode } from "react-icons/fa";
+import { FaFileUpload, FaCopy } from "react-icons/fa";
 import { ButtonBase } from "../components/sub/ButtonBase";
 import { SAMPLE_JSON } from "../data/sampleInputData";
-import { useRef, useState } from "react";
+import { useRef } from "react";
 import { ThumbnailUpload } from "../components/sub/ThumbnailUpload";
 import { BoxInputBase } from "../components/sub/BoxInputBase";
 import { ErrorComponent } from "../components/sub/ErrorComponent";
@@ -26,7 +26,6 @@ interface ExamUploadFormProps {
 }
 
 export const ExamUploadForm = (props : ExamUploadFormProps) => {
-    const [copied, setCopied] = useState(false);
     const fileInputRef = useRef<HTMLInputElement>(null);
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -40,8 +39,6 @@ export const ExamUploadForm = (props : ExamUploadFormProps) => {
     };
     const copySample = () => {
         navigator.clipboard.writeText(SAMPLE_JSON);
-        setCopied(true);
-        setTimeout(() => setCopied(false), 2000);
     };
 
     return (
@@ -63,7 +60,7 @@ export const ExamUploadForm = (props : ExamUploadFormProps) => {
                     
                     <div className="bg-white/5 p-6 rounded-xl border border-white/40 shadow-md">
                         <h2 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
-                            <FaImage className="text-secondary"/> Basic Information
+                            Basic Information
                         </h2>
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                             <div className="md:col-span-1 h-[180px]">
@@ -80,11 +77,11 @@ export const ExamUploadForm = (props : ExamUploadFormProps) => {
                                     onChange={(e) => props.onTitleChange(e.target.value)}
                                 />
                                 <div className="flex flex-col space-y-1">
-                                    <span className="text-white text-sm font-semibold pl-1">Description (HTML supported)</span>
+                                    <span className="text-white text-sm font-semibold pl-1">Description</span>
                                     <textarea 
                                         className="block bg-black/70 w-full text-white border border-white/90 rounded-md 
-                                        py-2 pl-4 pr-3 focus:border-blue-500 focus:outline-none resize-none h-[74px] text-sm"
-                                        placeholder="<p>This exam covers...</p>"
+                                        py-2 pl-4 pr-3 focus:outline-none resize-none h-[74px] text-sm"
+                                        placeholder="This exam covers..."
                                         value={props.content} rows={2}
                                         onChange={(e) => props.onContentChange(e.target.value)}
                                     />
@@ -96,7 +93,7 @@ export const ExamUploadForm = (props : ExamUploadFormProps) => {
                     <div className="bg-white/5 p-6 rounded-xl border border-white/40 shadow-md">
                         <div className="flex justify-between items-center mb-4">
                             <h2 className="text-xl font-bold text-white flex items-center gap-2">
-                                <FaFileCode className="text-blue-500"/> Exam Structure (JSON)
+                                Exam Structure (JSON)
                             </h2>
                             <ButtonBrand 
                                 name={"Import File"}
@@ -109,7 +106,7 @@ export const ExamUploadForm = (props : ExamUploadFormProps) => {
                         
                         <textarea 
                             className="w-full h-[500px] bg-black text-white font-mono text-sm p-4 rounded-lg border 
-                                border-white/50 focus:border-purple-500 focus:outline-none resize-y code-scrollbar leading-6"
+                                border-white/50 focus:outline-none resize-y code-scrollbar leading-6"
                             value={props.jsonContent}
                             onChange={(e) => props.onJsonChange(e.target.value)}
                             placeholder={`Paste JSON here... \nExample:\n${SAMPLE_JSON}`}
@@ -121,7 +118,7 @@ export const ExamUploadForm = (props : ExamUploadFormProps) => {
                     <div className="flex justify-end gap-4 pt-2">
                         <ButtonBase 
                             name="Cancel" width="" textColor="text-white"
-                            bgColor="bg-secondary" hoverBgColor="hover:bg-secondary-dark" 
+                            bgColor="bg-secondary/80" hoverBgColor="hover:bg-secondary/40" 
                             onClick={props.onCancel} disabled={props.loading}
                         />
                         <ButtonBase 
@@ -129,20 +126,20 @@ export const ExamUploadForm = (props : ExamUploadFormProps) => {
                                 ? (props.isEditMode ? "Updating..." : "Uploading...") 
                                 : (props.isEditMode ? "Update Exam" : "Create Exam")
                             }  
-                            width="" textColor="text-white" bgColor="bg-secondary" 
-                            hoverBgColor="hover:bg-secondary-dark" 
+                            width="" textColor="text-white" bgColor="bg-secondary/80" 
+                            hoverBgColor="hover:bg-secondary/40" 
                             onClick={props.onSubmit} disabled={props.loading}
                         />
                     </div>
                 </div>
 
                 <div className="w-full xl:w-[400px] flex flex-col gap-6">
-                    <div className="bg-white/5 p-6 rounded-xl border border-white/40 sticky top-12">
+                    <div className="bg-white/5 p-4 rounded-xl border border-white/40 sticky top-12">
                         <div className="flex justify-between items-center mb-4">
                             <h3 className="text-lg font-bold text-white">Sample JSON</h3>
                             <ButtonBrand 
-                                name={copied ? "Copied" : "Copy"}
-                                icon={copied ? <FaCheck className="text-green-400"/> : <FaCopy />}
+                                name={ "Copy" }
+                                icon={ <FaCopy /> }
                                 subClassName="border border-white/40 hover:bg-white/20"
                                 onClick={copySample} 
                             />

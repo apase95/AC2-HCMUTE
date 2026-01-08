@@ -161,7 +161,7 @@ export const PostDetailForm = (props: PostDetailFormProps) => {
                             href={props.content}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="flex items-center gap-2 px-4 py-2 bg-secondary hover:bg-purple-700 text-white font-bold rounded-lg transition-all"
+                            className="flex items-center gap-2 px-4 py-2 bg-secondary/80 hover:bg-secondary/40 text-white font-semibold rounded-lg transition-all"
                         >
                             <FaFileAlt /> <span>Open original file</span>
                         </a>

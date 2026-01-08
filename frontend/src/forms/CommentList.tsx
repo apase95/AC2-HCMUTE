@@ -90,15 +90,16 @@ export const CommentList = ({ postId, postAuthorId, onModel }: CommentListProps)
                             value={newComment}
                             onChange={(e) => setNewComment(e.target.value)}
                             placeholder="Write a comment..."
-                            className="w-full bg-white/5 border border-white/40 rounded-lg p-3 text-white focus:border-secondary focus:outline-none min-h-[100px]"
+                            className="w-full bg-white/5 border border-white/40 rounded-lg p-3 
+                                text-white focus:border-white/80 focus:outline-none min-h-[100px]"
                         />
                         <ButtonBase
                             type="submit"
                             onClick={handleAddComment}
                             name={"Post Comment"}
                             textColor="text-white"
-                            bgColor="bg-secondary"
-                            subClassName="hover:bg-accent/20"
+                            bgColor="bg-secondary/80"
+                            subClassName="hover:bg-secondary/40"
                             disabled={false}
                         />
                     </div>

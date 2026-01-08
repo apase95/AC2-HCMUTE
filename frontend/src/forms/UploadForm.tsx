@@ -124,13 +124,13 @@ export const UploadForm = (props : UploadFormProps) => {
         <div className="flex justify-end space-x-2">
           <ButtonBase
             type="button" width="w-28" name={"Cancel"}
-            textColor="text-white" bgColor="bg-secondary"
-            subClassName="hover:bg-accent/20"
+            textColor="text-white" bgColor="bg-secondary/80"
+            subClassName="hover:bg-secondary/40"
             disabled={props.loading} onClick={props.onCancel}
           />
           <ButtonBase
             type="submit" width="w-28" textColor="text-white"
-            bgColor="bg-secondary" subClassName="hover:bg-accent/20"
+            bgColor="bg-secondary/80" subClassName="hover:bg-secondary/40"
             name={props.loading ? 
               (props.isEditMode ? "Updating..." : "Uploading...") : 
               (props.isEditMode ? "Update" : "Upload")

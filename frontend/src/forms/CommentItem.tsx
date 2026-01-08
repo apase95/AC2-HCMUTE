@@ -76,7 +76,8 @@ export const CommentItem = ({ comment, currentUserId, postAuthorId, onDelete, on
                                 e.stopPropagation();
                                 setIsOpen(!isOpen);
                             }}
-                            className="p-2 rounded-full hover:bg-white/10 transition-all text-white/70 hover:text-white"
+                            className="p-2 rounded-full hover:bg-white/10 transition-all 
+                                text-white/70 hover:text-white"
                         >
                             <IoMdMore size={20} />
                         </button>
@@ -104,7 +105,8 @@ export const CommentItem = ({ comment, currentUserId, postAuthorId, onDelete, on
                         <textarea
                             value={editContent}
                             onChange={(e) => setEditContent(e.target.value)}
-                            className="w-full bg-white/5 text-white border border-white/40 rounded-lg p-3 focus:outline-none focus:border-secondary/80 min-h-[80px]"
+                            className="custom-scrollbar w-full bg-white/5 text-white border border-white/40 rounded-md 
+                                p-3 focus:outline-none focus:border-white/80 min-h-[80px]"
                         />
                         <div className="flex justify-end gap-2">
                             <ButtonBase
@@ -113,8 +115,8 @@ export const CommentItem = ({ comment, currentUserId, postAuthorId, onDelete, on
                                 width="w-22"
                                 name={"Cancel"}
                                 textColor="text-white"
-                                bgColor="bg-gray-300/20"
-                                subClassName="hover:bg-accent/20"
+                                bgColor="bg-gray-400/30"
+                                subClassName="hover:bg-gray-500/30"
                                 disabled={false}
                             />
                             <ButtonBase
@@ -123,14 +125,16 @@ export const CommentItem = ({ comment, currentUserId, postAuthorId, onDelete, on
                                 width="w-22"
                                 name={"Save"}
                                 textColor="text-white"
-                                bgColor="bg-secondary"
-                                subClassName="hover:bg-accent/20"
+                                bgColor="bg-secondary/80"
+                                subClassName="hover:bg-secondary/40"
                                 disabled={false}
                             />
                         </div>
                     </div>
                 ) : (
-                    <p className="text-white/80 text-sm leading-relaxed whitespace-pre-wrap">{comment.content}</p>
+                    <p className="text-white/80 text-sm leading-relaxed whitespace-pre-wrap">
+                        {comment.content}
+                    </p>
                 )}
             </div>
         </div>
