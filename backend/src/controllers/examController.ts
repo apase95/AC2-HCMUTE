@@ -86,7 +86,6 @@ export const createExam = async (req, res) => {
         });
 
         newExam = await newExam.populate("author", "firstName lastName avatarURL username email");
-
         res.status(201).json(formatExamResponse(newExam));
     } catch (error) {
         console.error("Error creating exam:", error);

@@ -69,12 +69,12 @@ export const UploadPage = () => {
 
   useEffect(() => {
     if (docSuccess) {
-        alert("Document uploaded/updated successfully!");
+        alert("Document uploaded! Updated successfully!");
         dispatch(resetDocState());
         navigate('/documents');
     }
     if (blogSuccess) {
-        alert("Blog uploaded/updated successfully!");
+        alert("Blog uploaded! Updated successfully!");
         dispatch(resetBlogState());
         navigate('/blogs');
     }

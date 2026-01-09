@@ -51,6 +51,7 @@ export const createDocument = async (req, res) => {
         if (!title) {
             return res.status(400).json({ message: "Title is required" });
         }
+
         let processedTags = [];
         if (tags) {
             if (typeof tags === "string") {

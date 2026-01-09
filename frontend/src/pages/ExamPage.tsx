@@ -15,7 +15,6 @@ export const ExamPage = () => {
 
     const [activeTag, setActiveTag] = useState<string>("All");
     const [activeSort, setActiveSort] = useState<string>("Popular");
-    const [page, setPage] = useState<number>(1);
 
     useEffect(() => {
         dispatch(fetchExams({ page, limit: 12 }));
@@ -76,7 +75,7 @@ export const ExamPage = () => {
                     </div>
 
                     {pagination && (
-                        <div className="mt-8 mb-12">
+                        <div className="mb-12">
                             <PaginationControl
                                 currentPage={pagination.currentPage}
                                 totalPages={pagination.totalPages}

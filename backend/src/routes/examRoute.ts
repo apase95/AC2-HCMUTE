@@ -18,8 +18,8 @@ const router = express.Router();
 router.get("/", getAllExams);
 router.get("/:id", protectedRoute, getExamById);
 
-router.post("/", protectedRoute, checkAdmin, createExam);
-router.post("/upload-json", protectedRoute, checkAdmin, createExamFromJson);
+router.post("/", protectedRoute, checkAdmin(), createExam);
+router.post("/upload-json", protectedRoute, checkAdmin(), createExamFromJson);
 
 router.post("/:id/review", protectedRoute, addReview);
 router.post("/:id/score", protectedRoute, submitExamScore);
