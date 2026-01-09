@@ -97,7 +97,7 @@ export const UploadForm = (props : UploadFormProps) => {
                 <span className="text-white text-sm font-semibold pl-1">Short Description</span>
                 <textarea 
                     className="block bg-black/70 w-full text-white border border-slate-400
-                      rounded-md py-2 pl-4 pr-3 shadow-sm focus:outline-none focus:border-accent sm:text-sm 
+                      rounded-md py-2 pl-4 pr-3 shadow-sm focus:outline-none sm:text-sm 
                       placeholder:text-white/50 resize-none transition-colors"
                     placeholder="Brief summary about this document..." rows={1}
                     value={props.description}

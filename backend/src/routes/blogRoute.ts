@@ -14,7 +14,7 @@ router.post(
         next();
     },
     protectedRoute,
-    checkAdmin,
+    checkAdmin(),
     uploadCloudinary.fields([
         { name: "thumbnail", maxCount: 1 },
         { name: "document", maxCount: 1 },

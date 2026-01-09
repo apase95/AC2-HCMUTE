@@ -37,9 +37,11 @@ const unescapeMarkdown = (text: string) => {
 };
 
 const extractHeadings = (markdown: string) => {
-    const lines = markdown.split("\n");
-    const headings = [];
-    const regex = /^(#{1,3})\s+(.*)$/;
+    if (!markdown) return [];
+
+    const lines = markdown.replace(/\r\n/g, "\n").split("\n");
+    const headings: { level: number; text: string; id: string }[] = [];
+    const regex = /^(#{2,3})\s+(.*)$/;
 
     for (const line of lines) {
         const match = line.match(regex);

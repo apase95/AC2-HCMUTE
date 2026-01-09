@@ -21,7 +21,7 @@ export const LayoutParticles = ({ zIndex = 1 }: LayoutParticlesProps) => {
     const particlesOptions = {
         particles: {
             number: {
-                value: 40,
+                value: 50,
                 density: { enable: true, area: 800 },
             },
             shape: {
@@ -41,7 +41,7 @@ export const LayoutParticles = ({ zIndex = 1 }: LayoutParticlesProps) => {
                 value: { min: 0.8, max: 1 },
             },
             size: {
-                value: { min: 4, max: 8 },
+                value: { min: 4 , max: 8 },
             },
             move: {
                 enable: true,
