@@ -77,15 +77,21 @@ export const CommentList = ({ postId, postAuthorId, onModel }: CommentListProps)
 
     return (
         <div className="w-full mt-10 border-t border-white/40 pt-8">
-            <h3 className="text-2xl font-bold text-white mb-6">Comments ({comments.length})</h3>
+            <h3 className="text-2xl font-bold text-white mb-6 select-none">
+                Comments ({comments.length})
+            </h3>
 
             {user ? (
                 <div className="flex gap-4 mb-8">
-                    <img
-                        src={user.avatarURL || "/logo.jpg"}
-                        className="w-10 h-10 rounded-full border border-white/20"
-                    />
-                    <div className="flex-1 flex flex-col gap-2 items-end">
+                    <div className="w-10 h-10 rounded-full overflow-hidden border border-white/80 select-none">
+                        <img
+                            src={user.avatarURL || "/logo.jpg"}
+                            alt={user.displayName}
+                            draggable={false}
+                            className="w-full h-full object-cover"
+                        />
+                    </div>
+                    <div className="flex-1 flex flex-col gap-2 items-end select-none">
                         <textarea
                             value={newComment}
                             onChange={(e) => setNewComment(e.target.value)}

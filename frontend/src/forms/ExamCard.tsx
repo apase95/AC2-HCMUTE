@@ -94,9 +94,8 @@ export const ExamCard = ({
                 pb-4 h-full flex flex-col items-start justify-center rounded-lg transition-all-300
                 ${subClassName} ${disableZoom ? "" : "hover:scale-105"}`}
         >
-            <div
-                className="w-full aspect-[16/9] rounded-lg overflow-hidden 
-                outline outline-[1px] outline-primary-dark/80 shadow-lg"
+            <div className="w-full aspect-[16/9] rounded-lg overflow-hidden 
+                outline outline-[1px] outline-primary-dark/80 shadow-lg select-none"
             >
                 <img
                     src={data.coverImage || "/card-default.jpg"}
@@ -144,7 +143,7 @@ export const ExamCard = ({
                 </div>
             </div>
 
-            <div className="w-full px-4 pt-1 flex-between flex-row">
+            <div className="w-full px-4 pt-1 flex-between flex-row select-none">
                 <span className="text-white/80 text-xs font-semibold">
                     {userScore > 0 ? `${userScore}% Score` : "Start Course"}
                 </span>

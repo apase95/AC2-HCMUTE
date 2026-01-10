@@ -28,7 +28,7 @@ export const ReviewList = (props: ReviewListProps) => {
 
     return (
         <>
-            <div className="bg-white/5 p-4 rounded-lg mb-6 border border-white/40">
+            <div className="bg-white/5 p-4 rounded-lg mb-6 border border-white/40 select-none">
                 {!canReview ? (
                     <p className="text-red-600 text-sm italic mb-2">
                         *You need to achieve at least 80% score to write a review. (Your best: {props.userScore}%)

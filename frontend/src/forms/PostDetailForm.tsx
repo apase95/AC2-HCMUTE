@@ -139,13 +139,16 @@ export const PostDetailForm = (props: PostDetailFormProps) => {
                             {props.title}
                         </h1>
                         <TagListComponent tags={props.tags || []} paddingButton="px-3 py-1" />
-                        <div className="w-full mt-4 flex items-center gap-6 text-sm font-medium text-gray-400">
+                        <div className="w-full mt-4 flex items-center gap-6 text-sm font-medium text-gray-400 select-none">
                             <div className="flex items-center gap-2">
-                                <img
-                                    src={props.authorAvatar || "/logo.jpg"}
-                                    alt="author"
-                                    className="w-8 h-8 rounded-full border border-gray-600"
-                                />
+                                <div className="w-8 h-8 rounded-full overflow-hidden border border-white/80">
+                                    <img
+                                        src={props.authorAvatar || "/logo.jpg"}
+                                        alt="author"
+                                        draggable={false}
+                                        className="w-full h-full object-cover"
+                                    />
+                                </div>
                                 <span className="text-white">{props.authorName}</span>
                             </div>
                             <div className="flex items-center gap-2">
@@ -167,7 +170,8 @@ export const PostDetailForm = (props: PostDetailFormProps) => {
                             href={props.content}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="flex items-center gap-2 px-4 py-2 bg-secondary/80 hover:bg-secondary/40 text-white font-semibold rounded-lg transition-all"
+                            className="flex items-center gap-2 px-4 py-2 bg-secondary/80 hover:bg-secondary/40
+                                text-white font-semibold rounded-lg transition-all select-none"
                         >
                             <FaFileAlt /> <span>Open original file</span>
                         </a>

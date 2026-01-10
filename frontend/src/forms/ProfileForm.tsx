@@ -16,25 +16,29 @@ export const ProfileForm = ( props : ProfileFormProps) => {
     return (
         <div className="relative min-h-screen h-auto w-full grid-pattern">
             <div className="mx-auto mb-28 top-0 translate-y-24 w-[90%] lg:w-[60%] bg-white/5 border border-slate-400 rounded-lg">
-                <div className="w-full py-2 md:py-12 flex flex-col md:flex-row">
+                <div className="w-full py-2 md:py-12 flex flex-col md:flex-row select-none">
                     
                     {/* Left Side */}
                     <div className="w-full md:w-1/3 mt-4 px-2 flex-center flex-col">
-                        <img 
-                            src={props.user.avatarURL || "/logo.jpg"} 
-                            alt="avatar" 
-                            className="w-[160px] h-[160px] object-cover rounded-full border-2 border-slate-300 pointer-events-none" 
-                        />
+                        <div className="w-[160px] h-[160px] rounded-full overflow-hidden border-2 border-white/60">    
+                            <img 
+                                src={props.user.avatarURL || "/logo.jpg"} 
+                                alt="avatar" 
+                                className="w-full h-full object-cover pointer-events-none" 
+                            />
+                        </div>
                         <h2 className="text-2xl text-center font-bold mt-4 text-white">{props.user.displayName}</h2>
                         <p className="text-md text-center text-gray-300">{props.user.email}</p>
                         <p className="text-md text-center text-slate-100 font-semibold mt-1">
                             {props.formData.country || "Viet Nam"}
                         </p>
-                        <img 
-                            src={props.user.role=="admin" ? "/builder.png" : "/explorer.png"} 
-                            alt="avatar" 
-                            className="w-[240px] h-[240px] object-cover pointer-events-none" 
-                        />
+                        <div className="w-[240px] h-[240px] rounded-full overflow-hidden">
+                            <img 
+                                src={props.user.role=="admin" ? "/builder.png" : "/explorer.png"} 
+                                alt="avatar" 
+                                className="w-full h-full object-cover pointer-events-none"
+                            />
+                        </div> 
                     </div>
 
                     <span className="hidden md:block w-[0.75px] h-auto bg-slate-400 mx-4"></span>

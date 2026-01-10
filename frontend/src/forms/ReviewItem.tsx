@@ -18,10 +18,15 @@ export const ReviewItem = (props: ReviewListProps) => {
         <div key={props.review._id} className="bg-white/5 p-4 rounded-lg border border-white/40">
             
             <div className="flex justify-between items-start mb-2">
-                <div className="flex items-center gap-2">
-                    <img src={props.review.user?.avatarURL || "/logo.jpg"} 
-                        className="w-6 h-6 rounded-full" 
-                    />
+                <div className="flex items-center gap-2 select-none">
+                    <div className="w-6 h-6 rounded-full overflow-hidden">
+                        <img 
+                            src={props.review.user?.avatarURL || "/logo.jpg"} 
+                            alt={props.review.user?.displayName || "User"}
+                            draggable={false}
+                            className="w-full h-full object-cover" 
+                        />
+                    </div>
                     <span className="font-bold text-sm text-white">
                         {props.review.user?.displayName || "User"}
                     </span>
@@ -54,7 +59,7 @@ export const ReviewItem = (props: ReviewListProps) => {
             </div>
            
             <div className="w-full flex items-center justify-between">
-                <span className="text-xs text-gray-400 mt-2 block">
+                <span className="text-xs text-gray-400 mt-2 block select-none">
                     {new Date(props.review.createdAt).toLocaleDateString()}
                 </span>
                 {(props.currentUser?._id === props.review.user?._id ||

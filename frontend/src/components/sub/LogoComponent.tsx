@@ -22,7 +22,8 @@ export const LogoComponent = (props: LogoComponentProps) => {
                 src={props.src}
                 alt={props.alt}
                 draggable={false}
-                className={`${props.subClassName} h-full w-auto`} />
+                className={`${props.subClassName} select-none h-full w-auto`} 
+            />
         </Link>
     );
 };

@@ -7,8 +7,8 @@ import { IoIosMail } from "react-icons/io";
 export const Footer = () => {
     return (
         <>
-            <div className="w-full p-[2px] animated-rgb-border"></div>
-            <div className="w-full bg-neutral-950 flex justify-center">
+            <div className="w-full p-[2px] animated-rgb-border" />
+            <div className="w-full bg-neutral-950 flex justify-center select-none">
                 <div className="w-4/5 py-8 flex flex-col justify-center items-center space-y-2">
                     <LogoTitleComponent
                         title="AC2 HCMUTE"

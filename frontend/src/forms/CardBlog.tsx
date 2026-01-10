@@ -75,7 +75,7 @@ export const CardBlog: React.FC<CardProps> = (props: CardProps) => {
         >
             <button
                 className="w-full aspect-[16/9] rounded-lg overflow-hidden
-            outline outline-[1px] outline-primary-dark/80 shadow-lg"
+            outline outline-[1px] outline-primary-dark/80 shadow-lg select-none"
             >
                 <img src={props.logoURL || "/card-default.jpg"} alt="card" draggable={false} />
             </button>
@@ -114,7 +114,7 @@ export const CardBlog: React.FC<CardProps> = (props: CardProps) => {
                 {props.author}
             </button>
 
-            <div className="pl-4 w-full flex flex-row items-center justify-start space-x-2">
+            <div className="pl-4 w-full flex flex-row items-center justify-start space-x-2 select-none">
                 <div className="text-white/60">
                     <FaBookOpen size="16" />
                 </div>

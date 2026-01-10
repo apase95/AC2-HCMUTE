@@ -48,10 +48,11 @@ export const CommentItem = ({ comment, currentUserId, postAuthorId, onDelete, on
     return (
         <div className="bg-white/5 p-4 rounded-lg border border-white/40 mb-4 flex flex-col items-start w-full">
             <div className="flex justify-between items-start w-full mb-2">
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-3 select-none">
                     <img
                         src={comment.author.avatarURL || "/logo.jpg"}
                         alt={comment.author.displayName}
+                        draggable={false}
                         className="w-10 h-10 rounded-full object-cover border border-white/20"
                     />
                     <div className="flex flex-col">

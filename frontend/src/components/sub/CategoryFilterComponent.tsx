@@ -18,7 +18,7 @@ export const CategoryFilterComponent = ({
 }: CategoryFilterComponentProps) => {
 
   return (
-    <div className="w-full flex flex-row flex-wrap items-center gap-2 mt-8 overflow-hidden">
+    <div className="w-full flex flex-row flex-wrap items-center gap-2 mt-8 overflow-hidden select-none">
         <div className="py-2 flex flex-row items-center space-x-2">
           <button 
             onClick={() => onSelectTag("All")}

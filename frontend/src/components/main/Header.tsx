@@ -44,7 +44,7 @@ export const Header = () => {
     
     return (
         <div className="z-20 fixed flex-between items-center w-full h-14 md:px-10 lg:px-10 px-4
-            bg-primary/95 border-b border-blue-500/20
+            bg-primary/95 border-b border-blue-500/20 select-none
         ">
             <div className="w-[30%] h-full flex-row-start space-x-12">
                 <LogoComponent 

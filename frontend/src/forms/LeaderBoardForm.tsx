@@ -31,10 +31,10 @@ export const LeaderBoardForm = (props: LeaderBoardFormProps) => {
                 <div className="w-full px-4 py-3 lg:px-12 lg:py-6 flex flex-col items-center bg-white/5 
                     rounded-lg border border-white/30 shadow-xl"
                 >
-                    <h1 className="w-full text-center font-bold text-3xl md:text-4xl mb-2">
+                    <h1 className="w-full text-center font-bold text-3xl md:text-4xl mb-2 select-none">
                         Leader Board
                     </h1>
-                    <p className="text-white font-semibold mb-10 text-xl">
+                    <p className="text-white font-semibold mb-10 text-xl select-none">
                         {props.examTitle}
                     </p>
 
@@ -52,7 +52,7 @@ export const LeaderBoardForm = (props: LeaderBoardFormProps) => {
                                         </div>
 
                                         <div className="flex-1 flex items-center gap-4">
-                                            <div className="w-10 h-10 rounded-full bg-white/10 overflow-hidden flex-center border border-white/20">
+                                            <div className="w-10 h-10 rounded-full bg-white/10 overflow-hidden flex-center border border-white/80 select-none">
                                                 <img
                                                     src={entry.user.avatarURL || "/logo.jpg"}
                                                     alt="avatar"

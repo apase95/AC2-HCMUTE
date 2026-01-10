@@ -70,7 +70,7 @@ export const PreviewExamForm = (props: PreviewExamFormProps) => {
                 >
                     <h1 className="text-2xl md:text-4xl font-bold text-white mb-6 leading-tight">{props.exam.title}</h1>
 
-                    <div className="grid grid-cols-3 gap-6 w-full mb-6 border-b border-white/30 pb-6">
+                    <div className="grid grid-cols-3 gap-6 w-full mb-6 border-b border-white/30 pb-6 select-none">
                         {RatingInfo.map((item, idx) => (
                             <div className="flex flex-col items-center justify-center" key={idx}>
                                 <div className="flex items-center space-x-1 text-white font-bold text-lg">
@@ -82,7 +82,7 @@ export const PreviewExamForm = (props: PreviewExamFormProps) => {
                         ))}
                     </div>
 
-                    <div className="flex flex-col justify-start space-y-3 mb-8 w-full">
+                    <div className="flex flex-col justify-start space-y-3 mb-8 w-full select-none">
                         {ExamInfo.map((item, idx) => (
                             <div className="flex items-center text-gray-300" key={idx}>
                                 <span className="mr-2">{item.icon}</span>
@@ -153,7 +153,7 @@ export const PreviewExamForm = (props: PreviewExamFormProps) => {
 
                     <div className="w-full mt-10 border-t border-white/40 pt-6">
                         <div className="w-full flex items-center justify-between mb-4">
-                            <div className="text-xl font-semibold text-white">Comments & Reviews</div>
+                            <div className="text-xl font-semibold text-white select-none">Comments & Reviews</div>
                             <ButtonBase
                                 type="button"
                                 name="Leader Board"

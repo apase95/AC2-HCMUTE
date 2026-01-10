@@ -25,6 +25,7 @@ export const ButtonBrand = (props: ButtonBrandProps) => {
                 flex-center py-2 px-4
                 rounded-md shadow-sm
                 text-sm font-medium
+                select-none
                 ${props.subClassName}
         `}>
             {props.name === "Google" && <FcGoogle className="mr-2" size='22'/>}

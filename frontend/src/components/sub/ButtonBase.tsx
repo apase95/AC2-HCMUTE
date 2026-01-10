@@ -20,6 +20,7 @@ export const ButtonBase = (props: ButtonBaseProps) => {
         border border-transparent rounded-md shadow-sm 
         text-sm font-medium transition-all-300
         disabled:opacity-50 disabled:cursor-not-allowed
+        select-none
         ${props.subClassName}
         ${props.width}
         ${props.textColor}

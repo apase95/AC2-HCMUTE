@@ -14,7 +14,7 @@ export const TagListComponent = (props: TagListComponentProps) => {
               bg-primary-dark/30 text-sm text-center text-accent 
               rounded-lg outline outline-[1px] outline-accent/40 
               hover:text-blue-200 hover:bg-primary-dark/80 
-              hover:outline-accent/80 transition-all-300`}>
+              hover:outline-accent/80 transition-all-300 select-none`}>
                 {tag}
             </button>
         ))}
