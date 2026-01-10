@@ -37,6 +37,12 @@ export const PreviewExamPage = () => {
         }
     };
 
+    const handleNavigateLeaderBoard = () => {
+        if (currentItem?._id) {
+            navigate(`/exams/${currentItem._id}/leaderboard`);
+        }
+    };
+
     const handleToggleFilter = () => {
         setIsFilterOpen((prev) => !prev);
     };
@@ -83,16 +89,17 @@ export const PreviewExamPage = () => {
             <LayoutParticles />
             <PreviewExamForm
                 exam={currentItem}
+                currentUser={user}
+                userScore={userScore}
+                isFilterOpen={isFilterOpen}
                 onStartExam={() => handleStartPart(-1)}
                 onStartPart={handleStartPart}
-                isFilterOpen={isFilterOpen}
                 onToggleFilter={handleToggleFilter}
                 onCloseFilter={handleCloseFilter}
                 onSelectFilter={handleSelectFilter}
-                userScore={userScore}
                 onSubmitReview={handleSubmitReview}
                 onDeleteReview={handleDeleteReview}
-                currentUser={user}
+                onNavigateLeaderBoard={handleNavigateLeaderBoard}
             />
         </>
     );

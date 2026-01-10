@@ -20,6 +20,7 @@ interface PreviewExamFormProps {
     onStartPart: (partIndex: number) => void;
     onSubmitReview: (rating: number, comment: string) => void;
     onDeleteReview: (reviewId: string) => void;
+    onNavigateLeaderBoard: () => void;
 }
 
 export const PreviewExamForm = (props: PreviewExamFormProps) => {
@@ -151,7 +152,18 @@ export const PreviewExamForm = (props: PreviewExamFormProps) => {
                     </div>
 
                     <div className="w-full mt-10 border-t border-white/40 pt-6">
-                        <h2 className="text-xl font-semibold text-white mb-4">Comments & Reviews</h2>
+                        <div className="w-full flex items-center justify-between">
+                            <div className="text-xl font-semibold text-white mb-4">Comments & Reviews</div>
+                            <ButtonBase
+                                type="button"
+                                name="Leader Board"
+                                bgColor=""
+                                hoverBgColor="hover:underline"
+                                textColor="text-white"
+                                subClassName="text-xl font-semibold mb-4 !p-0"
+                                onClick={props.onNavigateLeaderBoard}
+                            />
+                        </div>
                         <ReviewList
                             exam={props.exam}
                             currentUser={props.currentUser}

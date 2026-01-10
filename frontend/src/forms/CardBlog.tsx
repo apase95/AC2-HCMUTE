@@ -1,4 +1,4 @@
-import { FaBookOpen, FaChartLine } from "react-icons/fa";
+import { FaBookOpen } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { TagListComponent } from "../components/sub/TagListComponent";
 import { IoMdMore } from "react-icons/io";

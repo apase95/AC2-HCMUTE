@@ -54,6 +54,21 @@ const reviewSchema = new mongoose.Schema({
     }
 });
 
+const leaderBoardSchema = new mongoose.Schema({
+    user: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+        required: true,
+    },
+    score: {
+        type: Number,
+        required: true,
+    },
+    createdAt: {
+        type: Date,
+        default: Date.now,
+    }
+});
 
 const examSchema = new mongoose.Schema({
     title: {
@@ -104,6 +119,7 @@ const examSchema = new mongoose.Schema({
     },
     parts: [partSchema],
     reviews: [reviewSchema],
+    leaderBoard: [leaderBoardSchema],
     userScores: {
         type: Map,
         of: mongoose.Schema.Types.Mixed,
