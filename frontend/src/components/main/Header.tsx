@@ -47,7 +47,12 @@ export const Header = () => {
             bg-primary/95 border-b border-blue-500/20
         ">
             <div className="w-[30%] h-full flex-row-start space-x-12">
-                <LogoComponent to="/" alt="Logo" src="/logo-cloud-club-white.png" height="h-[70%]" />
+                <LogoComponent 
+                    to="/" 
+                    alt="Logo" 
+                    src="/logo-cloud-club-white.png" 
+                    height="h-[70%]"
+                />
                 <BoxSearch
                     maxWidth="max-w-30"
                     currentWidth="w-[60%]"
@@ -94,6 +99,7 @@ export const Header = () => {
                             <img 
                                 src={user?.avatarURL || "/logo.jpg"}
                                 alt="Avatar User" 
+                                draggable={false}
                                 className="h-full w-full object-cover rounded-full bg-black" 
                             />
                         </button>

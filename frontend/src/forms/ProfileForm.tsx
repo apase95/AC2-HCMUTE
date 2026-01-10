@@ -23,7 +23,7 @@ export const ProfileForm = ( props : ProfileFormProps) => {
                         <img 
                             src={props.user.avatarURL || "/logo.jpg"} 
                             alt="avatar" 
-                            className="w-[160px] h-[160px] object-cover rounded-full border-2 border-slate-300" 
+                            className="w-[160px] h-[160px] object-cover rounded-full border-2 border-slate-300 pointer-events-none" 
                         />
                         <h2 className="text-2xl text-center font-bold mt-4 text-white">{props.user.displayName}</h2>
                         <p className="text-md text-center text-gray-300">{props.user.email}</p>
@@ -33,7 +33,7 @@ export const ProfileForm = ( props : ProfileFormProps) => {
                         <img 
                             src={props.user.role=="admin" ? "/builder.png" : "/explorer.png"} 
                             alt="avatar" 
-                            className="w-[240px] h-[240px] object-cover " 
+                            className="w-[240px] h-[240px] object-cover pointer-events-none" 
                         />
                     </div>
 

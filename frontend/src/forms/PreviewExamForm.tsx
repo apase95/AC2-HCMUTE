@@ -160,7 +160,7 @@ export const PreviewExamForm = (props: PreviewExamFormProps) => {
                                 bgColor="transparent"
                                 hoverBgColor="text-font-underline-hover"
                                 textColor="text-white"
-                                subClassName="!text-xl !p-0"
+                                subClassName="!text-xl !font-semibold !p-0"
                                 onClick={props.onNavigateLeaderBoard}
                             />
                         </div>

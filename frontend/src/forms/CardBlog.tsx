@@ -77,7 +77,7 @@ export const CardBlog: React.FC<CardProps> = (props: CardProps) => {
                 className="w-full aspect-[16/9] rounded-lg overflow-hidden
             outline outline-[1px] outline-primary-dark/80 shadow-lg"
             >
-                <img src={props.logoURL || "/card-default.jpg"} alt="card" />
+                <img src={props.logoURL || "/card-default.jpg"} alt="card" draggable={false} />
             </button>
 
             <TagListComponent tags={props.tags} />

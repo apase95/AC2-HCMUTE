@@ -32,7 +32,7 @@ export const LeaderBoardForm = (props: LeaderBoardFormProps) => {
                     rounded-lg border border-white/30 shadow-xl"
                 >
                     <h1 className="w-full text-center font-bold text-3xl md:text-4xl mb-2">
-                        Leaderboard
+                        Leader Board
                     </h1>
                     <p className="text-white font-semibold mb-10 text-xl">
                         {props.examTitle}
@@ -56,6 +56,7 @@ export const LeaderBoardForm = (props: LeaderBoardFormProps) => {
                                                 <img
                                                     src={entry.user.avatarURL || "/logo.jpg"}
                                                     alt="avatar"
+                                                    draggable={false}
                                                     className="w-full h-full object-cover"
                                                 />
                                             </div>

@@ -101,6 +101,7 @@ export const ExamCard = ({
                 <img
                     src={data.coverImage || "/card-default.jpg"}
                     alt={data.title}
+                    draggable={false}
                     className="w-full h-full object-cover"
                 />
             </div>

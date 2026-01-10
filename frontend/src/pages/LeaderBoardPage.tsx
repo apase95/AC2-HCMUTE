@@ -7,6 +7,7 @@ import { LeaderBoardForm } from "../forms/LeaderBoardForm";
 import { LoadingSpinner } from "../components/sub/LoadingSpinner";
 import { ErrorComponent } from "../components/sub/ErrorComponent";
 import { FaMedal, FaTrophy } from "react-icons/fa6";
+import { LayoutParticles } from "../components/sub/LayoutParticles";
 
 export const LeaderBoardPage = () => {
     const { id } = useParams<{ id: string }>();
@@ -52,12 +53,15 @@ export const LeaderBoardPage = () => {
     const leaderboardData = currentItem?.leaderboard || [];
 
     return (
-        <LeaderBoardForm 
-            LeaderBoardData={leaderboardData} 
-            examTitle={currentItem?.title || "Exam Leaderboard"} 
-            onGetRankIcon={getRankIcon}
-            onGetRowStyle={getRowStyle}
-            onFormattedDate={formattedDate}
-        />
+        <>
+            <LayoutParticles />
+            <LeaderBoardForm 
+                LeaderBoardData={leaderboardData} 
+                examTitle={currentItem?.title || "Exam Leaderboard"} 
+                onGetRankIcon={getRankIcon}
+                onGetRowStyle={getRowStyle}
+                onFormattedDate={formattedDate}
+            />
+        </>
     );  
 };      

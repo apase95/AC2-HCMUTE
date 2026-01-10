@@ -21,6 +21,7 @@ export const LogoComponent = (props: LogoComponentProps) => {
             <img 
                 src={props.src}
                 alt={props.alt}
+                draggable={false}
                 className={`${props.subClassName} h-full w-auto`} />
         </Link>
     );
