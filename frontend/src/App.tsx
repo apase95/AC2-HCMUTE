@@ -14,6 +14,7 @@ import { QuizExamPage } from "./pages/QuizExamPage";
 import { PreviewExamPage } from "./pages/PreviewExamPage";
 import { SettingPage } from "./pages/SettingPage";
 import { ExamUploadPage } from "./pages/ExamUploadPage";
+import { LeaderBoardPage } from "./pages/LeaderBoardPage";
 
 function App() {
 
@@ -31,6 +32,7 @@ function App() {
           <Route path="/documents/:id" element={<><Header /><PostDetailPage /><Footer /></>} />
           <Route path="/exams/:id" element={<><Header /><PreviewExamPage /><Footer /></>} />
           <Route path="/exams/:id/take" element={<QuizExamPage />} /> 
+          <Route path="/exams/:id/leaderboard" element={<><Header /><LeaderBoardPage /><Footer /></>} /> 
           <Route path="/blogs/edit/:id" element={<><Header /><UploadPage /><Footer /></>} />
           <Route path="/documents/edit/:id" element={<><Header /><UploadPage /><Footer /></>} />
 

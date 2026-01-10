@@ -1,17 +1,28 @@
-import { LeaderBoardForm, type LeaderBoardEntry } from "../forms/LeaderBoardForm"
+import { useEffect } from "react";
+import { useParams } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import type { AppDispatch, RootState } from "../redux/store";
+import { fetchExamById } from "../redux/examSlice";
+import { LeaderBoardForm } from "../forms/LeaderBoardForm";
+import { LoadingSpinner } from "../components/sub/LoadingSpinner";
+import { ErrorComponent } from "../components/sub/ErrorComponent";
 
 export const LeaderBoardPage = () => {
+    const { id } = useParams<{ id: string }>();
+    const dispatch = useDispatch<AppDispatch>();
 
-    const leaderboard: LeaderBoardEntry[] = Array.from({ length: 10 }, (_, i) => ({
-        id: i + 1,
-        userScore: 80 - i,
-        maxScore: 100,
-        name: "User Name",
-        date: "January 10, 2025",
-        time: "1:24:30",
-    }));
+    const { currentItem, loading, error } = useSelector((state: RootState) => state.exams);
 
-    return (
-        <LeaderBoardForm LeaderBoardData={leaderboard} />
-    )
-}
+    useEffect(() => {
+        if (id) {
+            dispatch(fetchExamById(id));
+        }
+    }, [id, dispatch]);
+
+    if (loading) return <LoadingSpinner />;
+    if (error) return <ErrorComponent error={error} />;
+
+    const leaderboardData = currentItem?.leaderboard || [];
+
+    return <LeaderBoardForm LeaderBoardData={leaderboardData} examTitle={currentItem?.title || "Exam Leaderboard"} />;
+};

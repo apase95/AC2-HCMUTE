@@ -57,6 +57,18 @@ export interface ExamType {
     parts: ExamPart[];
     reviews?: Review[];
     userScores?: Record<string, number | { total: number; parts: Record<string, number> }>;
+    leaderboard?: LeaderBoardEntry[];
+}
+
+export interface LeaderBoardEntry {
+    user: {
+        _id: string;
+        displayName: string;
+        avatarURL: string;
+        email?: string;
+    };
+    score: number;
+    date: string;
 }
 
 export interface Review {

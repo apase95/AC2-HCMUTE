@@ -1,4 +1,5 @@
 import Exam from "../models/Exam.ts";
+import User from "../models/User.ts";
 
 const toTitleCase = (str: string) => {
     if (!str) return "";
@@ -154,13 +155,58 @@ export const getAllExams = async (req, res) => {
 export const getExamById = async (req, res) => {
     try {
         const { id } = req.params;
+        
+        // Populate các thông tin cơ bản của Exam
         const exam = await Exam.findById(id)
             .populate("author", "firstName lastName avatarURL username email")
             .populate("reviews.user", "firstName lastName avatarURL username email");
+
         if (!exam) {
             return res.status(404).json({ message: "Exam not found" });
         }
-        res.status(200).json(formatExamResponse(exam));
+
+        const examObj = formatExamResponse(exam);
+        let leaderboard: any[] = [];
+
+        if (exam.userScores && exam.userScores.size > 0) {
+            const userIds = Array.from(exam.userScores.keys());
+            const users = await User.find({ _id: { $in: userIds } }).select(
+                "firstName lastName avatarURL username email createdAt"
+            );
+
+            leaderboard = users.reduce((acc, user) => {
+                const scoreData = exam.userScores.get(user._id.toString());
+                let totalScore = 0;
+
+                if (typeof scoreData === "number") {
+                    totalScore = scoreData;
+                } else if (scoreData && typeof scoreData === "object" && "total" in scoreData) {
+                    totalScore = scoreData.total || 0;
+                }
+
+                if (totalScore >= 80) {
+                    const firstName = user.firstName || "";
+                    const lastName = user.lastName || "";
+                    let rawName = `${firstName} ${lastName}`.trim();
+                    if (!rawName) rawName = user.displayName || user.email || "Unknown User";
+
+                    acc.push({
+                        user: {
+                            _id: user._id,
+                            displayName: toTitleCase(rawName),
+                            avatarURL: user.avatarURL || "",
+                            email: user.email,
+                        },
+                        score: totalScore,
+                        date: user.createdAt, 
+                    });
+                }
+                return acc;
+            }, [] as any[]);
+            leaderboard.sort((a, b) => b.score - a.score);
+        }
+        examObj.leaderboard = leaderboard;
+        res.status(200).json(examObj);
     } catch (error) {
         console.error("Error fetching exam by ID:", error);
         res.status(500).json({ message: "Internal server error" });
