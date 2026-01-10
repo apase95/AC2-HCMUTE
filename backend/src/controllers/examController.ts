@@ -155,7 +155,7 @@ export const getAllExams = async (req, res) => {
 export const getExamById = async (req, res) => {
     try {
         const { id } = req.params;
-        
+
         // Populate các thông tin cơ bản của Exam
         const exam = await Exam.findById(id)
             .populate("author", "firstName lastName avatarURL username email")
@@ -198,7 +198,7 @@ export const getExamById = async (req, res) => {
                             email: user.email,
                         },
                         score: totalScore,
-                        date: user.createdAt, 
+                        date: user.createdAt,
                     });
                 }
                 return acc;
