@@ -26,7 +26,7 @@ export const LeaderBoardPage = () => {
         if (index === 0) return "bg-yellow-500/30 border-yellow-500/50";
         if (index === 1) return "bg-gray-400/30 border-gray-400/50";
         if (index === 2) return "bg-amber-600/30 border-amber-600/50";
-        return "border-white/20";
+        return "border-white/40";
     };
 
     const formattedDate = (dateString: string) => {

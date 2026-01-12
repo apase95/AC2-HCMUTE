@@ -20,12 +20,15 @@ export const BannerHomePage = () => {
 
             <div className="relative w-full flex justify-center items-center group">
                 <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] md:w-[500px] h-[300px] md:h-[500px]
-                    bg-blue-500 blur-[250px] rounded-full pointer-events-none animate-pulse-slow"
+                    bg-blue-500 blur-[250px] rounded-full animate-pulse-slow"
                 />
                 <img
-                    className="relative z-10 w-[80%] md:w-[60%] lg:w-[35%] h-auto object-contain drop-shadow-2xl transition-transform duration-500 ease-in-out transform hover:scale-105 hover:-rotate-2 select-none animate-float"
                     src="/logo-cloud-club-white.png"
                     alt="AWS Cloud Club Banner"
+                    draggable={false}
+                    className="relative z-10 w-[80%] md:w-[60%] lg:w-[35%] h-auto object-contain drop-shadow-2xl 
+                        transition-transform duration-500 ease-in-out transform
+                        hover:scale-105 hover:-rotate-2 select-none animate-float"
                 />
             </div>
         </div>

@@ -28,7 +28,7 @@ export const LeaderBoardForm = (props: LeaderBoardFormProps) => {
     return (
         <div className="relative min-h-screen h-auto w-full grid-pattern">
             <div className="mx-auto py-16 w-[90%] lg:w-[60%] md:w-[90%] sm:w-[90%]">
-                <div className="w-full px-4 py-3 lg:px-12 lg:py-6 flex flex-col items-center bg-white/5 
+                <div className="w-full mt-4 px-4 py-3 lg:px-12 lg:py-6 flex flex-col items-center bg-white/5 
                     rounded-lg border border-white/30 shadow-xl"
                 >
                     <h1 className="w-full text-center font-bold text-3xl md:text-4xl mb-2 select-none">
@@ -44,7 +44,7 @@ export const LeaderBoardForm = (props: LeaderBoardFormProps) => {
                                 const realIndex = startIndex + index;
                                 return (
                                     <div key={entry.user._id || realIndex}
-                                        className={`w-full flex items-center p-4 rounded-xl border transition-all duration-300
+                                        className={`w-full flex items-center p-4 rounded-lg border transition-all duration-300
                                             ${props.onGetRowStyle?.(realIndex)}`}
                                     >
                                         <div className="w-16 flex-center">

@@ -60,7 +60,7 @@ export const RegisterPage = () => {
 
     return (
         <div className="w-full flex-col-center space-y-6">
-            <div className="pt-6 w-full flex-col-center">
+            <div className="pt-6 w-full flex-col-center select-none">
                 <img
                     src="/logo-cloud-club-white.png"
                     alt="Logo"
